@@ -84,7 +84,7 @@ export class InfrastructureStack extends Stack {
     });
 
     new s3_deployment.BucketDeployment(this, 'DeployWithInvalidation', {
-      sources: [s3_deployment.Source.asset('../site/build')],
+      sources: [s3_deployment.Source.asset('../frontend/build')],
       destinationBucket: siteBucket,
       distribution,
       distributionPaths: ['/*'],

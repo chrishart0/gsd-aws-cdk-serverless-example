@@ -1,8 +1,8 @@
 version: '3.6'
 services:
-  cdk-base:
+  base:
     build: .
-    image: cdk-base
+    image: base
     command: ${COMPOSE_COMMAND:-bash}
     env_file:
       - configs.env

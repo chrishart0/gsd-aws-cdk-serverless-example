@@ -23,7 +23,7 @@ function App() {
             Maps and Other Useful things
           </Typography>
           <br/>
-          <Typography> <a href='https://github.com/chrishart0/lumbard-book' target="_blank" rel="noreferrer">
+          <Typography> <a href='https://github.com/chrishart0/gsd-aws-cdk-serverless-example' target="_blank" rel="noreferrer">
             <img height={20} src={githubLogo} alt='Logo'/>
             Edit on Github!
           </a> </Typography>
