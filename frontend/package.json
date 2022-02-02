@@ -1,5 +1,5 @@
 {
-  "name": "lumbard-book",
+  "name": "gsd-aws-cdk-serverless-example",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

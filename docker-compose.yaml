@@ -3,6 +3,8 @@ services:
   base:
     build: .
     image: base
+    stdin_open: true
+    tty: true    
     command: ${COMPOSE_COMMAND:-bash}
     env_file:
       - configs.env
@@ -10,3 +12,11 @@ services:
       - .:/app
       - /var/run/docker.sock:/var/run/docker.sock #Needed so a docker container can be run from inside a docker container
       - ~/.aws/:/root/.aws:ro
+    ports:
+      - "3010:3000"
+
+
+  test:
+    image: nginx
+    ports:
+      - "8080:80"

@@ -1,7 +1,7 @@
 SHELL=/bin/bash
 CDK_DIR=infrastructure/
 COMPOSE_RUN = docker-compose run --rm base
-COMPOSE_UP = docker-compose up
+COMPOSE_UP = docker-compose up base
 PROFILE = --profile default
 
 all: pre-reqs synth
@@ -17,10 +17,16 @@ _install:
 	npm install --prefix frontend/
 
 run:
+	${COMPOSE_UP}
 
-# run
+_run:
+	npm start --prefix frontend/
+
 
 # test
+########################
+# CDK
+#########################
 
 _prep-cache: #This resolves Error: EACCES: permission denied, open 'cdk.out/tree.json'
 	mkdir -p infrastructure/cdk.out/
@@ -35,6 +41,9 @@ _infra-test:
 	npm test --prefix infrastructure// --silent -- --watchAll=false
 
 test: _site-test _infra-test
+
+down:
+	docker-compose down --remove-orphans
 
 container-info:
 	${COMPOSE_RUN} make _container-info
@@ -52,7 +61,7 @@ _npm-install:
 	cd ${CDK_DIR} && npm install
 
 cli: _prep-cache
-	docker-compose run cdk-base /bin/bash
+	docker-compose run base /bin/bash
 
 synth: _prep-cache
 	${COMPOSE_RUN} make _synth
