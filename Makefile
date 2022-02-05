@@ -1,11 +1,19 @@
 SHELL=/bin/bash
 CDK_DIR=infrastructure/
-COMPOSE_RUN = docker-compose run --rm base
+COMPOSE_RUN = docker-compose run --service-ports --rm base
 COMPOSE_UP = docker-compose up base
 PROFILE = --profile default
 
 all: pre-reqs synth
 pre-reqs: _prep-cache container-build npm-install container-info
+
+prep-env:
+	${COMPOSE_RUN} make _prep-env
+
+_prep-env:
+	if [ -s configs.env ]; then \
+		touch configs.env \
+	fi
 
 _build:
 	npm run build --prefix frontend/
@@ -16,12 +24,14 @@ install:
 _install:
 	npm install --prefix frontend/
 
-run:
-	${COMPOSE_UP}
+_launch-browser: #Haven't tested on mac, not sure what will happen
+	nohup sleep 5 && xdg-open http://localhost:3000 || open "http://localhost:3000" >/dev/null 2>&1 &
+
+run: _launch-browser
+	${COMPOSE_RUN} make _run
 
 _run:
 	npm start --prefix frontend/
-
 
 # test
 ########################

@@ -1,17 +1,5 @@
 # GSD-AWS-CDK-Serverless-Example
 
-git clone git@github.com:drewkhoury/gsd-hello-world.git
-drew@drews-MBP gsd-hello-world % make run
-docker run -d -p "8080":"8080" --name go-hello-world go-hello-world:014d2b37ea01032be14a53bcc97f8fc1108bca14
-186b712da09ed122ac5632381a857f9d980d8bd6d4dae3f3f58d21d186abcef7
-drew@drews-MBP gsd-hello-world % docker ps
-CONTAINER ID   IMAGE                                                     COMMAND    CREATED         STATUS         PORTS                                       NAMES
-186b712da09e   go-hello-world:014d2b37ea01032be14a53bcc97f8fc1108bca14   "./main"   6 seconds ago   Up 5 seconds   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp   go-hello-world
-drew@drews-MBP gsd-hello-world % curl localhost:8080
-Welcome to Contino's Good Software Delivery%
-
-
-
 ## Setup
 Make sure to configure the following parameters locally before developing
 
