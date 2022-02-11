@@ -10,7 +10,7 @@ services:
       - configs.env
     volumes:
       - .:/app
-      - /var/run/docker.sock:/var/run/docker.sock #Needed so a docker container can be run from inside a docker container
+      # - /var/run/docker.sock:/var/run/docker.sock #Needed so a docker container can be run from inside a docker container
       - ~/.aws/:/root/.aws:ro
     ports:
       - "3000:3000"
