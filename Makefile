@@ -5,7 +5,11 @@ COMPOSE_RUN = docker-compose run --service-ports --rm base
 COMPOSE_UP = docker-compose up base
 PROFILE = --profile default
 
-all: pre-reqs synth
+.DEFAULT_GOAL := help
+
+help:
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
 pre-reqs: _prep-cache container-build npm-install container-info
 
 prep-env:
@@ -16,9 +20,7 @@ _prep-env:
 		touch configs.env \
 	fi
 
-_build:
-	npm run build --prefix frontend/
-
+.PHONY: install
 install: 
 	${COMPOSE_RUN} make _install
 
@@ -28,23 +30,40 @@ _install:
 _launch-browser: #Haven't tested on mac, not sure what will happen
 	nohup sleep 5 && xdg-open http://localhost:3000 || open "http://localhost:3000" >/dev/null 2>&1 &
 
+.PHONY: run
 run: _launch-browser
 	${COMPOSE_RUN} make _run
 
 _run:
 	npm start --prefix frontend/
 
+.PHONY: test
 test: 
 	${COMPOSE_RUN} make _test
 
 _test:
 	npm test --prefix frontend/
 
+.PHONY: test-ci
 test-ci: 
 	${COMPOSE_RUN} make _test-ci
 
 _test-ci:
 	export CI=true && npm test --prefix frontend/
+
+.PHONY: build
+build: 
+	${COMPOSE_RUN} make _build
+
+_build:
+	npm run build --prefix frontend/
+
+.PHONY: ci
+ci: 
+	${COMPOSE_RUN} make _ci
+
+_ci:
+	npm ci --prefix frontend/
 
 # test
 ########################

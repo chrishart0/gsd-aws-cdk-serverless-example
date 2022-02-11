@@ -1,4 +1,5 @@
 # GSD-AWS-CDK-Serverless-Example
+[![CI](https://github.com/chrishart0/gsd-aws-cdk-serverless-example/actions/workflows/CI.yml/badge.svg)](https://github.com/chrishart0/gsd-aws-cdk-serverless-example/actions/workflows/CI.yml)
 
 ## Why?
 Three Musketeers pattern allows for ease of setup and better developer experience for this complicated local testing environment, with the added benefit of using the same local commands for the CI/CD.
@@ -16,27 +17,13 @@ Starts up the jest test running in interactive mode, running `npm test` inside t
 #### `make test-ci`
 Runs `npm test` in CI mode, which simply outputs the results of the tests once.
 
-## Workflow
-Test
+### Building
+#### `make build`
+Standard `npm run build` command
 
-```
-make test
-```
+#### `make ci`
+Uses npm ci, which is the prefered build command for us in CI pipelines, as it is faster and more stable. 
 
-Build site
-```
-make _site-build
-```
-
-Check infra diff
-```
-make diff
-```
-
-Deploy
-```
-make deploy
-```
 
 # Goals
 It's hard to maintain and locally test serverless envs.
