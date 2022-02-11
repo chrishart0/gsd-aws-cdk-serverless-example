@@ -1,0 +1,37 @@
+name: Main CI
+
+on:
+  push:
+    # Publish `master` as Docker `latest` image.
+    branches:
+      - main
+
+    # Publish `v1.2.3` tags as releases.
+    tags:
+      - v*
+
+  # Run tests for any PRs.
+  pull_request:
+
+# env:
+#   IMAGE_NAME: go-hello-world
+
+jobs:
+
+  build:
+    
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+    - name: checkout code
+      uses: actions/checkout@v2
+
+    - name: Tests
+      run: make test-ci
+      
+    # - name: Build the Go package
+    #   run: make build
+
+    # - name: Run the Go package locally (detached)
+    #   run: make run
