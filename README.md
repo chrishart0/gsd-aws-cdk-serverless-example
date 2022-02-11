@@ -44,5 +44,7 @@ Devs don't do local testing (because it's too hard or takes too much time).
 # TODO
 A non-exhaustive list of items left to be addressed.
 
-* Fix XDG/Open issue on "make run" in WSL
-
+* Fix XDG/Open issue on `make run` in WSL
+* Graceful exit of `make run`
+* Add error handling for the case of dummy values being left in `configs.env` when running `make synth`
+* Add to setup documentation to run `make build` prior to `make run`
