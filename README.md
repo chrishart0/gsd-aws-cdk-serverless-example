@@ -39,3 +39,10 @@ Devs don't do local testing (because it's too hard or takes too much time).
   * Unit, E2E, Infra
 * Easy to read, self guiding docs which explain how the process works
 * Optional: Use S3 in logic tier 
+
+
+# TODO
+A non-exhaustive list of items left to be addressed.
+
+* Fix XDG/Open issue on "make run" in WSL
+
