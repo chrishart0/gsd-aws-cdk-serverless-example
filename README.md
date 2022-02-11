@@ -1,7 +1,20 @@
 # GSD-AWS-CDK-Serverless-Example
 
+## Why?
+Three Musketeers pattern allows for ease of setup and better developer experience for this complicated local testing environment, with the added benefit of using the same local commands for the CI/CD.
+
+
 ## Setup
 Make sure to configure the following parameters locally before developing
+
+## Working with the frontend
+
+### Testing
+#### `make test`
+Starts up the jest test running in interactive mode, running `npm test` inside the container
+
+#### `make test-ci`
+Runs `npm test` in CI mode, which simply outputs the results of the tests once.
 
 ## Workflow
 Test

@@ -1,6 +1,7 @@
 SHELL=/bin/bash
 CDK_DIR=infrastructure/
 COMPOSE_RUN = docker-compose run --service-ports --rm base
+COMPOSE_RUN_CI = docker-compose --env-file ci.env run --service-ports --rm base
 COMPOSE_UP = docker-compose up base
 PROFILE = --profile default
 
@@ -33,6 +34,18 @@ run: _launch-browser
 _run:
 	npm start --prefix frontend/
 
+test: 
+	${COMPOSE_RUN} make _test
+
+_test:
+	npm test --prefix frontend/
+
+test-ci: 
+	${COMPOSE_RUN} make _test
+
+_test-ci:
+	export CI=true && npm test --prefix frontend/
+
 # test
 ########################
 # CDK
@@ -49,8 +62,6 @@ _site-test:
 
 _infra-test:
 	npm test --prefix infrastructure// --silent -- --watchAll=false
-
-test: _site-test _infra-test
 
 down:
 	docker-compose down --remove-orphans

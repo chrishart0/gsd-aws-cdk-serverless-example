@@ -13,7 +13,7 @@ function App() {
       <header className="App-header">
         <Container maxWidth='md'>
           <Typography variant='h2'>
-            Heading
+            Primary Heading
           </Typography>
           <Typography variant='h3'>
             SubHeading
