@@ -1,10 +1,10 @@
-name: Main CI
+name: CI
 
 on:
   push:
     # Publish `master` as Docker `latest` image.
     branches:
-      - main
+      - master
 
     # Publish `v1.2.3` tags as releases.
     tags:
