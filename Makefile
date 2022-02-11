@@ -29,7 +29,7 @@ _install:
 	npm install --prefix frontend/
 
 _launch-browser: #Haven't tested on mac, not sure what will happen
-	nohup sleep 5 && xdg-open http://localhost:3000 || open "http://localhost:3000" >/dev/null 2>&1 &
+	nohup sleep 5 && xdg-open http://localhost:3000 || open "http://localhost:3000" || explorer.exe "http://localhost:3000"  >/dev/null 2>&1 &
 
 .PHONY: run
 run: _launch-browser
