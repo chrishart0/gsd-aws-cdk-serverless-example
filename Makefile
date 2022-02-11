@@ -1,6 +1,7 @@
 SHELL=/bin/bash
 CDK_DIR=infrastructure/
-COMPOSE_RUN = docker-compose run --service-ports --rm base
+COMPOSE_RUN = docker-compose run --rm base
+COMPOSE_RUN_WITH_PORTS = docker-compose run --service-ports --rm base
 # COMPOSE_RUN_CI = docker-compose --env-file ci.env run --service-ports --rm base
 COMPOSE_UP = docker-compose up base
 PROFILE = --profile default
@@ -32,7 +33,7 @@ _launch-browser: #Haven't tested on mac, not sure what will happen
 
 .PHONY: run
 run: _launch-browser
-	${COMPOSE_RUN} make _run
+	${COMPOSE_RUN_WITH_PORTS} make _run
 
 _run:
 	npm start --prefix frontend/
