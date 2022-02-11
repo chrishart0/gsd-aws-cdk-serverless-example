@@ -1,7 +1,7 @@
 SHELL=/bin/bash
 CDK_DIR=infrastructure/
 COMPOSE_RUN = docker-compose run --service-ports --rm base
-COMPOSE_RUN_CI = docker-compose --env-file ci.env run --service-ports --rm base
+# COMPOSE_RUN_CI = docker-compose --env-file ci.env run --service-ports --rm base
 COMPOSE_UP = docker-compose up base
 PROFILE = --profile default
 
@@ -41,7 +41,7 @@ _test:
 	npm test --prefix frontend/
 
 test-ci: 
-	${COMPOSE_RUN} make _test
+	${COMPOSE_RUN} make _test-ci
 
 _test-ci:
 	export CI=true && npm test --prefix frontend/
