@@ -8,23 +8,21 @@ import { aws_iam as iam } from 'aws-cdk-lib';
 import { aws_certificatemanager as acm } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 
-//Handle envs
-import { env } from 'process';
-
 export class InfrastructureStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
     
-    const hostedZoneId:string = env.hostedZoneId!
-    const hostedZoneName:string = env.hostedZoneName!
-    const subDomain = env.subDomain
-    const domain = env.domain
+    const hostedZoneId:string = process.env.hostedZoneId!
+    const hostedZoneName:string = process.env.hostedZoneName!
+    const subDomain = process.env.subDomain
+    const domain = process.env.domain
     const siteDomain = subDomain + '.' + domain
 
     const zone = route53.HostedZone.fromHostedZoneAttributes(this, 'zone', {
       zoneName: hostedZoneName,
       hostedZoneId: hostedZoneId,
     });
+    
     const cloudfrontOAI = new cloudfront.OriginAccessIdentity(this, 'cloudfront-OAI', {
       comment: `OAI for ${siteDomain}`
     });
