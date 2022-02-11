@@ -47,4 +47,19 @@ A non-exhaustive list of items left to be addressed.
 * Fix XDG/Open issue on `make run` in WSL
 * Graceful exit of `make run`
 * Add error handling for the case of dummy values being left in `configs.env` when running `make synth`
-* Add to setup documentation to run `make build` prior to `make run`
+* CDK
+  * Add check to run `make build` prior to `make synth` or `make diff` or `make deploy` only if build files not detected
+  * CDK better env var handling. Need valid way to maintain on local without risk of commiting and entering in vars through CI/CD (Reference here make: https://github.com/contino/gsd-hello-world)
+* Always run a `make build` before `make deploy`
+* Add `make synth` and cdk testing to github actions
+* Testing
+  * Make CDK tests pass and add to make `cdk test` file
+  * Right now `make test` only runs frontend jest tests, `make test` should run all tests (currently only frontend jest tests and infra CDK tests)
+    * There will be commands: `make test` `make infra-test` `make frontend-test`
+
+
+* Lambda API
+  * Setup basic lambda function in CDK infra
+  * Add unit tests to lambda function
+  * Add these things to make
+  * Add local DynamoDB Container
