@@ -11,7 +11,7 @@ PROFILE = --profile default
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-pre-reqs: _prep-cache container-build npm-install container-info _test-install-e2e-local-headful
+pre-reqs: _prep-cache container-build npm-install container-info _test-install-e2e-headful
 
 prep-env:
 	${COMPOSE_RUN} make _prep-env
@@ -31,8 +31,8 @@ install:
 _install:
 	npm install --prefix frontend/
 
-_launch-browser: #Haven't tested on mac, not sure what will happen
-	nohup sleep 5 && xdg-open http://localhost:3000 || open "http://localhost:3000" >/dev/null 2>&1 &
+_launch-browser: #Haven't tested on mac, not sure what will happen ToDo: instead of wait 10 seconds, wait for site to be loaded
+	nohup sleep 10 && xdg-open http://localhost:3000 || open "http://localhost:3000" >/dev/null 2>&1 &
 
 .PHONY: run
 run: _launch-browser
@@ -56,12 +56,13 @@ _test-ci:
 	export CI=true && npm test --prefix frontend/
 
 #Running e2e tests locally in a browser cannot be done via a container, if you want to run e2e tests headfully(in browser) then run this command
-.PHONY: _test-install-e2e-local-headful
-_test-install-e2e-local-headful:
+.PHONY: _test-install-e2e-headful
+_test-install-e2e-headful:
 	sudo npx playwright install-deps
 
 #ToDo: Figure out how to specify a directory for npx https://github.com/npm/npx/issues/74#issuecomment-676092733
-_test-e2e:
+#ToDo: Ensure frontend is up and running
+_test-e2e-headful:
 	cd e2eTests && npx playwright test --headed && cd .. 
 
 .PHONY: build
@@ -85,8 +86,6 @@ _ci:
 
 _prep-cache: #This resolves Error: EACCES: permission denied, open 'cdk.out/tree.json'
 	mkdir -p infrastructure/cdk.out/
-
-
 
 _site-test:
 	npm test --prefix site/ --silent -- --watchAll=false

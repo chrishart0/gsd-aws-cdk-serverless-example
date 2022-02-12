@@ -72,6 +72,7 @@ A non-exhaustive list of items left to be addressed.
   * Make CDK tests pass and add to make `cdk test` file
   * Right now `make test` only runs frontend jest tests, `make test` should run all tests (currently only frontend jest tests and infra CDK tests)
     * There will be commands: `make test` `make infra-test` `make frontend-test`
+* For _launch-browser command instead of wait 10 seconds, wait for site to be loaded
 
 
 * Lambda API

@@ -11,7 +11,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <Container maxWidth='md'>
+        <Container className='header' maxWidth='md'>
           <Typography variant='h2'>
             Primary Heading
           </Typography>
@@ -23,7 +23,7 @@ function App() {
             Maps and Other Useful things
           </Typography>
           <br/>
-          <Typography> <a href='https://github.com/chrishart0/gsd-aws-cdk-serverless-example' target="_blank" rel="noreferrer">
+          <Typography className='footer'> <a href='https://github.com/chrishart0/gsd-aws-cdk-serverless-example' target="_blank" rel="noreferrer">
             <img height={20} src={githubLogo} alt='Logo'/>
             Edit on Github!
           </a> </Typography>
