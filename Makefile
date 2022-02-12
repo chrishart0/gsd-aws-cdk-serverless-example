@@ -11,7 +11,7 @@ PROFILE = --profile default
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-pre-reqs: _prep-cache container-build npm-install container-info
+pre-reqs: _prep-cache container-build npm-install container-info _test-install-e2e-local-headful
 
 prep-env:
 	${COMPOSE_RUN} make _prep-env
@@ -20,6 +20,9 @@ _prep-env:
 	if [ -s configs.env ]; then \
 		touch configs.env \
 	fi
+
+container-build: pre-reqs
+	docker-compose build
 
 .PHONY: install
 install: 
@@ -52,6 +55,15 @@ test-ci:
 _test-ci:
 	export CI=true && npm test --prefix frontend/
 
+#Running e2e tests locally in a browser cannot be done via a container, if you want to run e2e tests headfully(in browser) then run this command
+.PHONY: _test-install-e2e-local-headful
+_test-install-e2e-local-headful:
+	sudo npx playwright install-deps
+
+#ToDo: Figure out how to specify a directory for npx https://github.com/npm/npx/issues/74#issuecomment-676092733
+_test-e2e:
+	cd e2eTests && npx playwright test --headed && cd .. 
+
 .PHONY: build
 build: 
 	${COMPOSE_RUN} make _build
@@ -74,8 +86,7 @@ _ci:
 _prep-cache: #This resolves Error: EACCES: permission denied, open 'cdk.out/tree.json'
 	mkdir -p infrastructure/cdk.out/
 
-container-build: pre-reqs
-	docker-compose build
+
 
 _site-test:
 	npm test --prefix site/ --silent -- --watchAll=false
