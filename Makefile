@@ -1,7 +1,7 @@
 SHELL=/bin/bash
 CDK_DIR=infrastructure/
 COMPOSE_RUN = docker-compose run --rm base
-COMPOSE_RUN_WITH_PORTS = docker-compose run --service-ports --rm base
+COMPOSE_RUN_WITH_PORTS = docker-compose run -d --name 3m-base --service-ports --rm base
 # COMPOSE_RUN_CI = docker-compose --env-file ci.env run --service-ports --rm base
 COMPOSE_UP = docker-compose up base
 PROFILE = --profile default
@@ -32,14 +32,15 @@ _install:
 	npm install --prefix frontend/
 
 _launch-browser: #Haven't tested on mac, not sure what will happen ToDo: instead of wait 10 seconds, wait for site to be loaded
-	nohup sleep 10 && xdg-open http://localhost:3000 || open "http://localhost:3000" >/dev/null 2>&1 &
+	nohup sleep 5 && xdg-open http://localhost:3000 || open "http://localhost:3000" || explorer.exe "http://localhost:3000"  >/dev/null 2>&1 &
 
 .PHONY: run
 run: _launch-browser
 	${COMPOSE_RUN_WITH_PORTS} make _run
+	docker exec -it 3m-base tail -f watch.log
 
 _run:
-	npm start --prefix frontend/
+	npm start --prefix frontend/ > /app/watch.log
 
 .PHONY: test
 test: 
@@ -53,7 +54,7 @@ test-ci:
 	${COMPOSE_RUN} make _test-ci
 
 _test-ci:
-	export CI=true && npm test --prefix frontend/
+	export CI=true && npm test --prefix frontend/ &
 
 _test-e2e:
 	cd e2e && npx playwright test && cd .. 

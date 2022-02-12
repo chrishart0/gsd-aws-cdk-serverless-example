@@ -2,3 +2,4 @@ node_modules
 frontend/node_modules
 infrastructure/lib
 nohup.out
+watch.log
