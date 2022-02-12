@@ -21,7 +21,7 @@ _prep-env:
 		touch configs.env \
 	fi
 
-container-build: pre-reqs
+container-build: 
 	docker-compose build
 
 .PHONY: install
@@ -55,6 +55,9 @@ test-ci:
 _test-ci:
 	export CI=true && npm test --prefix frontend/
 
+_test-e2e:
+	cd e2e && npx playwright test && cd .. 
+
 #Running e2e tests locally in a browser cannot be done via a container, if you want to run e2e tests headfully(in browser) then run this command
 .PHONY: _test-install-e2e-headful
 _test-install-e2e-headful:
@@ -63,7 +66,7 @@ _test-install-e2e-headful:
 #ToDo: Figure out how to specify a directory for npx https://github.com/npm/npx/issues/74#issuecomment-676092733
 #ToDo: Ensure frontend is up and running
 _test-e2e-headful:
-	cd e2eTests && npx playwright test --headed && cd .. 
+	cd e2e && npx playwright test --headed && cd .. 
 
 .PHONY: build
 build: 
