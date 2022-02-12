@@ -13,6 +13,9 @@ help:
 
 pre-reqs: _prep-cache container-build npm-install container-info
 
+is-built: 
+	if [ ! -f /frontend/build ]; then make build; fi
+
 prep-env:
 	${COMPOSE_RUN} make _prep-env
 
@@ -27,6 +30,7 @@ install:
 
 _install:
 	npm install --prefix frontend/
+	npm install --prefix infrastructure/
 
 _launch-browser: #Haven't tested on mac, not sure what will happen
 	nohup sleep 5 && xdg-open http://localhost:3000 || open "http://localhost:3000" || explorer.exe "http://localhost:3000"  >/dev/null 2>&1 &
@@ -105,7 +109,7 @@ _npm-install:
 cli: _prep-cache
 	docker-compose run base /bin/bash
 
-synth: _prep-cache
+synth: _prep-cache is-built
 	${COMPOSE_RUN} make _synth
 
 _synth:
@@ -117,7 +121,7 @@ bootstrap: _prep-cache
 _bootstrap:
 	cd ${CDK_DIR} && cdk bootstrap ${PROFILE}
 
-deploy: _prep-cache
+deploy: _prep-cache build
 	${COMPOSE_RUN} make _deploy 
 
 _deploy: 
@@ -129,7 +133,7 @@ destroy:
 _destroy:
 	cd ${CDK_DIR} && cdk destroy --force ${PROFILE}
 
-diff: _prep-cache
+diff: _prep-cache is-built
 	${COMPOSE_RUN} make _diff
 
 _diff: _prep-cache
