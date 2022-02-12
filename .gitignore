@@ -3,3 +3,4 @@ frontend/node_modules
 infrastructure/lib
 nohup.out
 watch.log
+configs.env
