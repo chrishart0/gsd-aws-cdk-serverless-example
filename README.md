@@ -10,6 +10,22 @@ Make sure to configure the following parameters locally before developing
 
 ## Working with the frontend
 
+### Dependencies
+3 Musketeers allows us to get away without installing Node or NPM locally but how do we manage dependencies? To get access to the full npm cli just run `make cli` and you are free to run any commands you wish.
+
+#### Example: Adding a new dependency to the frontend
+```
+# Enter into the three musketeers container
+$ make cli
+
+# Install the new dependecy
+$ npm install --save-dev playwright
+
+# Exit the Container
+$exit
+```
+
+
 ### Testing
 #### `make test`
 Starts up the jest test running in interactive mode, running `npm test` inside the container
