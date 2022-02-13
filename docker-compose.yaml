@@ -16,4 +16,7 @@ services:
       - "3000:3000"
 
   playwright:
-    image: mcr.microsoft.com/playwright:focal
+    image: base
+    volumes:
+      - .:/app
+    network_mode: "host"

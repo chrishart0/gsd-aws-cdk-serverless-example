@@ -32,8 +32,8 @@ jobs:
     - name: Install
       run: make install
 
-    - name: Tests
-      run: make test-ci
+    - name: Frontend Unit Tests
+      run: make test-frontend
       
     - name: Build
       run: make ci

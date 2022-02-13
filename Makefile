@@ -2,6 +2,7 @@ SHELL=/bin/bash
 CDK_DIR=infrastructure/
 COMPOSE_RUN = docker-compose run --rm base
 COMPOSE_RUN_WITH_PORTS = docker-compose run -d --name 3m-base --service-ports --rm base
+COMPOSE_RUN_PLAYWRIGHT = docker-compose run --rm playwright
 # COMPOSE_RUN_CI = docker-compose --env-file ci.env run --service-ports --rm base
 COMPOSE_UP = docker-compose up base
 PROFILE = --profile default
@@ -11,7 +12,7 @@ PROFILE = --profile default
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-pre-reqs: _prep-cache container-build npm-install container-info _test-install-e2e-headful
+pre-reqs: _prep-cache build-container npm-install container-info _test-install-e2e-headful
 
 prep-env:
 	${COMPOSE_RUN} make _prep-env
@@ -21,7 +22,7 @@ _prep-env:
 		touch configs.env \
 	fi
 
-container-build: 
+build-container: 
 	docker-compose build
 
 .PHONY: install
@@ -43,18 +44,25 @@ _run:
 	npm start --prefix frontend/ > /app/watch.log
 
 .PHONY: test
-test: 
-	${COMPOSE_RUN} make _test
+test: test-frontend test-e2e
 
-_test:
-	npm test --prefix frontend/
+.PHONY: test-frontend
+test-frontend: 
+	${COMPOSE_RUN} make _test-frontend
 
-.PHONY: test-ci
-test-ci: 
-	${COMPOSE_RUN} make _test-ci
+_test-frontend:
+	export CI=true && npm test --prefix frontend/
 
-_test-ci:
-	export CI=true && npm test --prefix frontend/ &
+.PHONY: test-frontend-interactive
+test-frontend-interactive: 
+	${COMPOSE_RUN} make _test-frontend-interactive
+
+_test-frontend-interactive:
+	npm test --prefix frontend/ &
+
+.PHONY: test-e2e
+test-e2e:
+	${COMPOSE_RUN_PLAYWRIGHT} make _test-e2e
 
 _test-e2e:
 	cd e2e && npx playwright test && cd .. 
@@ -66,6 +74,7 @@ _test-install-e2e-headful:
 
 #ToDo: Figure out how to specify a directory for npx https://github.com/npm/npx/issues/74#issuecomment-676092733
 #ToDo: Ensure frontend is up and running
+.PHONY: _test-install-e2e-headful
 _test-e2e-headful:
 	cd e2e && npx playwright test --headed && cd .. 
 
@@ -117,6 +126,10 @@ _npm-install:
 
 cli: _prep-cache
 	docker-compose run base /bin/bash
+
+#ToDo: Install playwright in base container so no need for sepereate cli commands
+cli-playwright: _prep-cache
+	docker-compose run playwright /bin/bash
 
 synth: _prep-cache
 	${COMPOSE_RUN} make _synth

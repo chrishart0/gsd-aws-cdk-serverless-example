@@ -26,12 +26,25 @@ $exit
 ```
 
 
-### Testing
-#### `make test`
+## Testing
+### `make test`
+Run all tests: currently frontend unit and e2e
+
+### `make test-frontend`
+Runs `npm test` in CI mode, which simply outputs the results of the tests once.
+
+### `make test-frontend-interactive`
 Starts up the jest test running in interactive mode, running `npm test` inside the container
 
-#### `make test-ci`
-Runs `npm test` in CI mode, which simply outputs the results of the tests once.
+### End to End Testing
+
+#### `make test-e2e`
+Run e2e tests inside a container headless
+
+#### `_test-install-e2e-headful`
+Install needed pre-reqs for running headful e2e tests locally
+
+#### `_test-e2e-headful`
 
 ### Building
 #### `make build`
