@@ -12,8 +12,6 @@ PROFILE = --profile default
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-pre-reqs: _prep-cache build-container npm-install container-info _test-install-e2e-headful
-
 is-built: 
 	if [ ! -d ./frontend/build ]; then make build; fi
 
@@ -28,27 +26,47 @@ _prep-env:
 build-container: 
 	docker-compose build
 
-.PHONY: install
-install: 
-	${COMPOSE_RUN} make _install
+cli: _prep-cache
+	docker-compose run base /bin/bash
 
-_install:
+################
+# Core Commands#
+################
+pre-reqs: _prep-cache build-container container-info _test-install-e2e-headful
+
+# These commands run processes acorss the mulitple layers of the project
+.PHONY: install
+install npm-install: install-infra install-frontend
+
+.PHONY: test
+test: test-frontend test-e2e
+
+.PHONY: run
+run: run-frontend
+
+################
+### Frontend ###
+################
+
+.PHONY: install-frontend
+install-frontend: 
+	${COMPOSE_RUN} make _install-frontend
+
+_install-frontend npm-install-frontend:
 	npm install --prefix frontend/
-	npm install --prefix infrastructure/
 
 _launch-browser: #Haven't tested on mac, not sure what will happen ToDo: instead of wait 10 seconds, wait for site to be loaded
 	nohup sleep 5 && xdg-open http://localhost:3000 || open "http://localhost:3000" || explorer.exe "http://localhost:3000"  >/dev/null 2>&1 &
 
-.PHONY: run
-run: _launch-browser
-	${COMPOSE_RUN_WITH_PORTS} make _run
+#ToDo: Frontend doesn't go down when you kill it. Ctrl+c or z should kill the container
+#ToDo: handling for when port 3000 is already in use
+.PHONY: run-frontend
+run-frontend start-frontend: _launch-browser
+	${COMPOSE_RUN_WITH_PORTS} make _run-frontend
 	docker exec -it 3m-base tail -f watch.log
 
-_run:
+_run-frontend:
 	npm start --prefix frontend/ > /app/watch.log
-
-.PHONY: test
-test: test-frontend test-e2e
 
 .PHONY: test-frontend
 test-frontend: 
@@ -89,6 +107,12 @@ build:
 _build:
 	npm run build --prefix frontend/
 
+container-info:
+	${COMPOSE_RUN} make _container-info
+
+_container-info:
+	./containerInfo.sh
+
 .PHONY: ci
 ci: 
 	${COMPOSE_RUN} make _ci
@@ -96,16 +120,19 @@ ci:
 _ci:
 	npm ci --prefix frontend/
 
-# test
-########################
-# CDK
-#########################
+#############
+### Infra ###
+#############
+
+.PHONY: install-infra
+install-infra npm-install-infra: 
+	${COMPOSE_RUN} make _install-infra
+
+_install-infra:
+	npm install --prefix infrastructure/
 
 _prep-cache: #This resolves Error: EACCES: permission denied, open 'cdk.out/tree.json'
 	mkdir -p infrastructure/cdk.out/
-
-_site-test:
-	npm test --prefix site/ --silent -- --watchAll=false
 
 _infra-test:
 	npm test --prefix infrastructure// --silent -- --watchAll=false
@@ -113,27 +140,8 @@ _infra-test:
 down:
 	docker-compose down --remove-orphans
 
-container-info:
-	${COMPOSE_RUN} make _container-info
-
-_container-info:
-	./containerInfo.sh
-
 clear-cache:
 	${COMPOSE_RUN} rm -rf ${CDK_DIR}cdk.out && rm -rf ${CDK_DIR}node_modules
-
-npm-install: _prep-cache
-	${COMPOSE_RUN} make _npm-install
-
-_npm-install:
-	cd ${CDK_DIR} && npm install
-
-cli: _prep-cache
-	docker-compose run base /bin/bash
-
-#ToDo: Install playwright in base container so no need for sepereate cli commands
-cli-playwright: _prep-cache
-	docker-compose run playwright /bin/bash
 
 synth: _prep-cache is-built
 	${COMPOSE_RUN} make _synth
