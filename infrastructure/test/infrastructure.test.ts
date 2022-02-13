@@ -2,7 +2,7 @@ import * as cdk from 'aws-cdk-lib';
 import { Template, Match } from 'aws-cdk-lib/assertions';
 import * as Infrastructure from '../lib/infrastructure-stack';
 
-test('SQS Queue and SNS Topic Created', () => {
+test('S3 Static Site Bucket Created', () => {
   const app = new cdk.App();
   // WHEN
   const stack = new Infrastructure.InfrastructureStack(app, 'DemoSite');

@@ -87,15 +87,21 @@ A non-exhaustive list of items left to be addressed.
 * ~~Always run a `make build` before `make deploy`~~
 * Add `make synth` and cdk testing to github actions
 * Testing
-  * Make CDK tests pass and add to make `cdk test` file
-  * Right now `make test` only runs frontend jest tests, `make test` should run all tests (currently only frontend jest tests and infra CDK tests)
-    * There will be commands: `make test` `make infra-test` `make frontend-test`
-  * Add end to end testing with playwright
-    * Ensure it runs in CI
+  * ~~Make CDK tests pass and add to make `cdk test` file~~
+  * ~~Right now `make test` only runs frontend jest tests, `make test` should run all tests (currently only frontend jest tests and infra CDK tests)~~
+    * ~~There will be commands: `make test` `make infra-test` `make frontend-test`~~
+  * ~~Add end to end testing with playwright~~
+    * ~~Ensure it runs in CI~~
 * For _launch-browser command instead of wait 10 seconds, wait for site to be loaded
 
 * Quality Scan: Add <https://www.sonarqube.org/downloads/> community edition to CI/CD. Use [this](https://github.com/contino/gsd-hello-world/blob/main/.github/workflows/quality.yml) as reference
 
+* CI/CD
+  * Add env handling to Github Actions
+  * Get deploys working in GitHub actions
+  * Split e2e testing into own run to speedup CI/CD
+  * Add npm caching to speed up CI/CD
+  * Investiagte prebuilding containers for faster CI/CD
 
 * Lambda API
   * Setup basic lambda function in CDK infra

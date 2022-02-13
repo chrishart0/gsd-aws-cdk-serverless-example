@@ -35,8 +35,8 @@ jobs:
     - name: Frontend Unit Tests
       run: make test-frontend
 
-    - name: Infra Unit Tests
-      run: make test-infra
+    # - name: Infra Unit Tests
+    #   run: make test-infra
       
     - name: Local e2e test
       run: | 
