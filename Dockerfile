@@ -20,6 +20,6 @@ CMD ["make", "_run"]
 # ENTRYPOINT ["make", "_run"]
 
 
-# Use uid 1001 who owns $HOME in GH Actions runtime
-# See why: https://github.com/arjun27/playwright-github-actions/issues/1
-USER 1001
+# # Use uid 1001 who owns $HOME in GH Actions runtime
+# # See why: https://github.com/arjun27/playwright-github-actions/issues/1
+# USER 1001

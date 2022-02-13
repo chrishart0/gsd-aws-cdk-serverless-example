@@ -31,7 +31,6 @@ jobs:
 
     - name: Install
       run: |
-        sudo chown -R 1001:0 "/.npm"
         make install
 
     - name: Frontend Unit Tests
