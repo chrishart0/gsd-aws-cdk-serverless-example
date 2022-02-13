@@ -41,7 +41,7 @@ jobs:
     - name: Local e2e test
       run: | 
         make run-frontend-daemon
-        make run test-e2e
+        make test-e2e
 
     - name: Build
       run: make ci
