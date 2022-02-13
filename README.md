@@ -77,9 +77,9 @@ A non-exhaustive list of items left to be addressed.
 * ~~Graceful exit of `make run`~~
 * Add error handling for the case of dummy values being left in `configs.env` when running `make synth`
 * CDK
-  * Add check to run `make build` prior to `make synth` or `make diff` or `make deploy` only if build files not detected
-  * CDK better env var handling. Need valid way to maintain on local without risk of commiting and entering in vars through CI/CD (Reference here make: https://github.com/contino/gsd-hello-world)
-* Always run a `make build` before `make deploy`
+  * ~~Add check to run `make build` prior to `make synth` or `make diff` or `make deploy` only if build files not detected~~
+  * ~~CDK better env var handling. Need valid way to maintain on local without risk of commiting and entering in vars through CI/CD (Reference here make: https://github.com/contino/gsd-hello-world)~~
+* ~~Always run a `make build` before `make deploy`~~
 * Add `make synth` and cdk testing to github actions
 * Testing
   * Make CDK tests pass and add to make `cdk test` file
