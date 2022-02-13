@@ -14,3 +14,9 @@ services:
       - ~/.aws/:/root/.aws:ro
     ports:
       - "3000:3000"
+
+  playwright:
+    image: base
+    volumes:
+      - .:/app
+    network_mode: "host"

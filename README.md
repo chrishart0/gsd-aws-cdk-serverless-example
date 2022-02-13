@@ -10,12 +10,41 @@ Make sure to configure the following parameters locally before developing
 
 ## Working with the frontend
 
-### Testing
-#### `make test`
+### Dependencies
+3 Musketeers allows us to get away without installing Node or NPM locally but how do we manage dependencies? To get access to the full npm cli just run `make cli` and you are free to run any commands you wish.
+
+#### Example: Adding a new dependency to the frontend
+```
+# Enter into the three musketeers container
+$ make cli
+
+# Install the new dependecy
+$ npm install --save-dev playwright
+
+# Exit the Container
+$exit
+```
+
+
+## Testing
+### `make test`
+Run all tests: currently frontend unit and e2e
+
+### `make test-frontend`
+Runs `npm test` in CI mode, which simply outputs the results of the tests once.
+
+### `make test-frontend-interactive`
 Starts up the jest test running in interactive mode, running `npm test` inside the container
 
-#### `make test-ci`
-Runs `npm test` in CI mode, which simply outputs the results of the tests once.
+### End to End Testing
+
+#### `make test-e2e`
+Run e2e tests inside a container headless
+
+#### `_test-install-e2e-headful`
+Install needed pre-reqs for running headful e2e tests locally
+
+#### `_test-e2e-headful`
 
 ### Building
 #### `make build`
@@ -56,6 +85,11 @@ A non-exhaustive list of items left to be addressed.
   * Make CDK tests pass and add to make `cdk test` file
   * Right now `make test` only runs frontend jest tests, `make test` should run all tests (currently only frontend jest tests and infra CDK tests)
     * There will be commands: `make test` `make infra-test` `make frontend-test`
+  * Add end to end testing with playwright
+    * Ensure it runs in CI
+* For _launch-browser command instead of wait 10 seconds, wait for site to be loaded
+
+* Quality Scan: Add <https://www.sonarqube.org/downloads/> community edition to CI/CD. Use [this](https://github.com/contino/gsd-hello-world/blob/main/.github/workflows/quality.yml) as reference
 
 
 * Lambda API

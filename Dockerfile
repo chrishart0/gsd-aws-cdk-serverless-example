@@ -1,4 +1,4 @@
-FROM node:16
+FROM mcr.microsoft.com/playwright:focal
 
 #Install NodeJS and CDK
 RUN apt-get update && apt-get install -y \
@@ -8,9 +8,6 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-
-EXPOSE 3000
-
 
 # we are able to override the CMD instruction and execute any command successfully. 
 # However, while we were successful, this process of overriding the CMD instruction 
