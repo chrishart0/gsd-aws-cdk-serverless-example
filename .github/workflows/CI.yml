@@ -30,7 +30,9 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Install
-      run: make install
+      run: |
+        sudo chown -R 1001:0 "/.npm"
+        make install
 
     - name: Frontend Unit Tests
       run: make test-frontend
