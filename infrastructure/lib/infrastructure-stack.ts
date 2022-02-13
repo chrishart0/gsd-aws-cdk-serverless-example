@@ -6,6 +6,7 @@ import { aws_s3 as s3 } from 'aws-cdk-lib';
 import { aws_s3_deployment as s3_deployment } from 'aws-cdk-lib';
 import { aws_iam as iam } from 'aws-cdk-lib';
 import { aws_certificatemanager as acm } from 'aws-cdk-lib';
+import * as serverless from 'aws-cdk-lib/aws-sam';
 import { Construct } from 'constructs';
 
 export class InfrastructureStack extends Stack {
@@ -88,5 +89,12 @@ export class InfrastructureStack extends Stack {
       distributionPaths: ['/*'],
       memoryLimit: 512
     });
+    
+    //-----------------------//
+    // Backend Infra via SAM //
+    //-----------------------//
+    // https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_sam-readme.html
+
+
   }
 }

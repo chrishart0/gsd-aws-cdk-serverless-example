@@ -85,7 +85,7 @@ A non-exhaustive list of items left to be addressed.
   * ~~Add check to run `make build` prior to `make synth` or `make diff` or `make deploy` only if build files not detected~~
   * ~~CDK better env var handling. Need valid way to maintain on local without risk of commiting and entering in vars through CI/CD (Reference here make: https://github.com/contino/gsd-hello-world)~~
 * ~~Always run a `make build` before `make deploy`~~
-* Add `make synth` and cdk testing to github actions
+* ~~Add `make synth` and cdk testing to github actions~~
 * Testing
   * ~~Make CDK tests pass and add to make `cdk test` file~~
   * ~~Right now `make test` only runs frontend jest tests, `make test` should run all tests (currently only frontend jest tests and infra CDK tests)~~

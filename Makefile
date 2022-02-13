@@ -109,6 +109,19 @@ ci:
 _ci:
 	npm ci --prefix frontend/
 
+###############
+### Backend ###
+###############
+
+_build-backend:
+	cd backend && sam build && cd ..
+
+_run-backend-invoke _backend-invoke _invoke:
+	cd backend && sam local invoke && cd ..
+
+_run-backend _start-api:
+	cd backend && sam local start-api -p 3001 && cd ..
+
 #############
 ### Infra ###
 #############
