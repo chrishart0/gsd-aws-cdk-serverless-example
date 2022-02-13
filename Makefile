@@ -36,7 +36,7 @@ pre-reqs: _prep-cache build-container container-info _test-install-e2e-headful
 
 # These commands run processes acorss the mulitple layers of the project
 .PHONY: install
-install npm-install: install-infra install-frontend
+install npm-install: install-infra install-frontend install-e2e
 
 .PHONY: test
 test: test-frontend test-e2e
@@ -88,24 +88,6 @@ test-frontend-interactive:
 
 _test-frontend-interactive:
 	npm test --prefix frontend/ &
-
-.PHONY: test-e2e
-test-e2e:
-	${COMPOSE_RUN_PLAYWRIGHT} make _test-e2e
-
-_test-e2e:
-	cd e2e && npx playwright test && cd .. 
-
-#Running e2e tests locally in a browser cannot be done via a container, if you want to run e2e tests headfully(in browser) then run this command
-.PHONY: _test-install-e2e-headful
-_test-install-e2e-headful:
-	sudo npx playwright install-deps
-
-#ToDo: Figure out how to specify a directory for npx https://github.com/npm/npx/issues/74#issuecomment-676092733
-#ToDo: Ensure frontend is up and running
-.PHONY: _test-install-e2e-headful
-_test-e2e-headful:
-	cd e2e && npx playwright test --headed && cd .. 
 
 .PHONY: build
 build: 
@@ -182,3 +164,31 @@ diff: _prep-cache is-built
 
 _diff: _prep-cache
 	cd ${CDK_DIR} && cdk diff ${PROFILE}
+
+###########
+### E2E ###
+###########
+.PHONY: install-e2e
+install-e2e: 
+	${COMPOSE_RUN} make _install-e2e
+
+_install-e2e npm-install-playwright:
+	npm install --prefix e2e/
+
+.PHONY: test-e2e
+test-e2e:
+	${COMPOSE_RUN_PLAYWRIGHT} make _test-e2e
+
+_test-e2e:
+	cd e2e && npx playwright test && cd .. 
+
+#Running e2e tests locally in a browser cannot be done via a container, if you want to run e2e tests headfully(in browser) then run this command
+.PHONY: _test-install-e2e-headful
+_test-install-e2e-headful:
+	cd e2e && npx playwright install-deps && cd ..
+
+#ToDo: Figure out how to specify a directory for npx https://github.com/npm/npx/issues/74#issuecomment-676092733
+#ToDo: Ensure frontend is up and running
+.PHONY: _test-install-e2e-headful
+_test-e2e-headful:
+	cd e2e && npx playwright test --headed && cd .. 
