@@ -94,7 +94,26 @@ export class InfrastructureStack extends Stack {
     // Backend Infra via SAM //
     //-----------------------//
     // https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_sam-readme.html
-
+    const backendFunction = new serverless.CfnFunction(this, 'BackendFunction',{
+      packageType: 'Image',
+      architectures: ['x86_64'],
+      imageUri: 'helloworldfunction:python3.9-v1',
+      events: {
+        HelloWorld: {
+          properties: {
+            path: '/hello',
+            method: 'get',
+            variables: {
+              variablesKey: 'variables',
+            },
+          },
+          type: 'Api',
+        },
+      }
+    })
+    backendFunction.addMetadata('Dockerfile', 'Dockerfile');
+    backendFunction.addMetadata('DockerContext', './hello_world');
+    backendFunction.addMetadata('DockerTag', 'python3.9-v1');
 
   }
 }

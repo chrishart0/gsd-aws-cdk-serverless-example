@@ -117,10 +117,10 @@ _build-backend:
 	cd backend && sam build && cd ..
 
 _run-backend-invoke _backend-invoke _invoke:
-	cd backend && sam local invoke && cd ..
+	cd backend && sam local invoke BackendFunction -t ../infrastructure/template.yaml && cd ..
 
 _run-backend _start-api:
-	cd backend && sam local start-api -p 3001 && cd ..
+	cd backend && sam local start-api -p 3001 -t ../infrastructure/template.yaml && cd ..
 
 #############
 ### Infra ###
