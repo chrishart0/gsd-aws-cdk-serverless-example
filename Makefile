@@ -1,7 +1,7 @@
 SHELL=/bin/bash
 CDK_DIR=infrastructure/
 COMPOSE_RUN = docker-compose run --rm base
-COMPOSE_RUN_WITH_PORTS = docker-compose run -d --name 3m-base --service-ports --rm base
+COMPOSE_RUN_WITH_PORTS = docker-compose run -d --name base --service-ports --rm base
 COMPOSE_RUN_PLAYWRIGHT = docker-compose run --rm playwright
 # COMPOSE_RUN_CI = docker-compose --env-file ci.env run --service-ports --rm base
 COMPOSE_UP = docker-compose up base
@@ -63,9 +63,16 @@ _launch-browser: #Haven't tested on mac, not sure what will happen ToDo: instead
 .PHONY: run-frontend
 run-frontend start-frontend: _launch-browser
 	${COMPOSE_RUN_WITH_PORTS} make _run-frontend
-	docker exec -it 3m-base tail -f watch.log
+	docker exec -it base tail -f watch.log
 
 _run-frontend:
+	npm start --prefix frontend/ > /app/watch.log
+
+#Useful for the CI, for local dev recomendation is to simply run make run in another terminal
+run-frontend-daemon start-frontend-daemon:
+	${COMPOSE_RUN_WITH_PORTS} make _run-frontend
+
+_run-frontend-daemon:
 	npm start --prefix frontend/ > /app/watch.log
 
 .PHONY: test-frontend

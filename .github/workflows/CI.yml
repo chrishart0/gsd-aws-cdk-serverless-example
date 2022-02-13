@@ -38,6 +38,11 @@ jobs:
     - name: Infra Unit Tests
       run: make test-infra
       
+    - name: Local e2e test
+      run: | 
+        make run-frontend-daemon
+        make run test-e2e
+
     - name: Build
       run: make ci
     
