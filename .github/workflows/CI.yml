@@ -34,6 +34,9 @@ jobs:
 
     - name: Frontend Unit Tests
       run: make test-frontend
+
+    - name: Infra Unit Tests
+      run: make test-infra
       
     - name: Build
       run: make ci
