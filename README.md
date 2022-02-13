@@ -27,6 +27,11 @@ $exit
 
 
 ## Testing
+There are three kinds of tests included in this repo:
+* [End-to-end](infrastructure/test/infrastructure.test.ts)
+* [Frontend Unit Tests](frontend/src/App.test.js)
+* [AWS CDK Infrastructure Unit Tests:](infrastructure/test/infrastructure.test.ts) find docs [here](https://docs.aws.amazon.com/cdk/v2/guide/testing.html)
+
 ### `make test`
 Run all tests: currently frontend unit and e2e
 

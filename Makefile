@@ -134,8 +134,11 @@ _install-infra:
 _prep-cache: #This resolves Error: EACCES: permission denied, open 'cdk.out/tree.json'
 	mkdir -p infrastructure/cdk.out/
 
-_infra-test:
-	npm test --prefix infrastructure// --silent -- --watchAll=false
+test-infra:
+	${COMPOSE_RUN} make _test-infra
+
+_test-infra:
+	npm test --prefix infrastructure/ 
 
 down:
 	docker-compose down --remove-orphans
@@ -147,7 +150,7 @@ synth: _prep-cache is-built
 	${COMPOSE_RUN} make _synth
 
 _synth:
-	cd ${CDK_DIR} && cdk synth --no-staging ${PROFILE}
+	cd ${CDK_DIR} && cdk synth --no-staging ${PROFILE} > template.yaml
 
 bootstrap: _prep-cache
 	${COMPOSE_RUN} make _bootstrap
