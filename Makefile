@@ -15,7 +15,7 @@ help:
 pre-reqs: _prep-cache build-container npm-install container-info _test-install-e2e-headful
 
 is-built: 
-	if [ ! -f /frontend/build ]; then make build; fi
+	if [ ! -d ./frontend/build ]; then make build; fi
 
 prep-env:
 	${COMPOSE_RUN} make _prep-env
