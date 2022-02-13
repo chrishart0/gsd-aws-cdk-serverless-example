@@ -19,3 +19,7 @@ CMD ["make", "_run"]
 # However, where it differs is that ENTRYPOINT doesn't allow you to override the command.
 # ENTRYPOINT ["make", "_run"]
 
+
+# Use uid 1001 who owns $HOME in GH Actions runtime
+# See why: https://github.com/arjun27/playwright-github-actions/issues/1
+USER 1001

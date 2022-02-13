@@ -34,9 +34,6 @@ jobs:
 
     - name: Frontend Unit Tests
       run: make test-frontend
-
-    # - name: Infra Unit Tests
-    #   run: make test-infra
       
     - name: Local e2e test
       run: | 
@@ -48,6 +45,9 @@ jobs:
     
     - name: Infra Synth
       run: make synth
+
+    # - name: Infra Unit Tests
+    #   run: make test-infra
 
     # - name: Run the Go package locally (detached)
     #   run: make run
