@@ -15,6 +15,9 @@ help:
 is-built: 
 	if [ ! -d ./frontend/build ]; then make build; fi
 
+is-installed:
+	if [ ! -d ./frontend/node_modules ]; then make install; fi  
+
 prep-env:
 	${COMPOSE_RUN} make _prep-env
 
@@ -61,7 +64,7 @@ _launch-browser: #Haven't tested on mac, not sure what will happen ToDo: instead
 #ToDo: Frontend doesn't go down when you kill it. Ctrl+c or z should kill the container
 #ToDo: handling for when port 3000 is already in use
 .PHONY: run-frontend
-run-frontend start-frontend: _launch-browser
+run-frontend start-frontend: is-installed _launch-browser
 	${COMPOSE_RUN_WITH_PORTS} make _run-frontend
 	docker exec -it base tail -f watch.log
 

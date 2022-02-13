@@ -93,6 +93,7 @@ A non-exhaustive list of items left to be addressed.
   * ~~Add end to end testing with playwright~~
     * ~~Ensure it runs in CI~~
 * For _launch-browser command instead of wait 10 seconds, wait for site to be loaded
+* Add check that for build files as a pre-req for `make run`
 
 * Quality Scan: Add <https://www.sonarqube.org/downloads/> community edition to CI/CD. Use [this](https://github.com/contino/gsd-hello-world/blob/main/.github/workflows/quality.yml) as reference
 
