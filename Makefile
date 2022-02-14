@@ -1,9 +1,8 @@
 SHELL=/bin/bash
 CDK_DIR=infrastructure/
 COMPOSE_RUN = docker-compose run --rm base
-COMPOSE_RUN_WITH_PORTS = docker-compose run -d --service-ports --rm base
+COMPOSE_RUN_WITH_PORTS = docker-compose run -d --name base --service-ports --rm base
 COMPOSE_RUN_PLAYWRIGHT = docker-compose run --rm playwright
-# COMPOSE_RUN_CI = docker-compose --env-file ci.env run --service-ports --rm base
 COMPOSE_UP = docker-compose up base
 PROFILE = --profile default
 
