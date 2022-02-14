@@ -104,7 +104,6 @@ A non-exhaustive list of items left to be addressed.
   * Investiagte prebuilding containers for faster CI/CD
 
 * Lambda API
-  * Setup basic lambda function in CDK infra
+  * ~~Setup basic lambda function in CDK infra~~
   * Add unit tests to lambda function
-  * Add these things to make
   * Add local DynamoDB Container
