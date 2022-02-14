@@ -36,10 +36,10 @@ pre-reqs: _prep-cache build-container container-info _test-install-e2e-headful
 
 # These commands run processes acorss the mulitple layers of the project
 .PHONY: install
-install npm-install: install-infra install-frontend install-e2e
+install npm-install: install-infra install-frontend install-e2e install-backend
 
 .PHONY: test
-test: test-frontend test-e2e
+test: test-frontend test-e2e test-infra
 
 .PHONY: run
 run: run-frontend
@@ -113,8 +113,28 @@ _ci:
 ### Backend ###
 ###############
 
-_build-backend:
-	cd backend && sam build && cd ..
+_prep-venv:
+	python3 -m venv backend/.venv
+
+.PHONY: install-backend
+install-backend: 
+	${COMPOSE_RUN} make _install-backend
+
+_install-backend:
+	source backend/.venv/bin/activate
+	pip install -r backend/tests/requirements.txt
+
+.PHONY: test-backend
+test-backend: test-backend-unit
+
+.PHONY: test-backend-unit
+test-backend-unit:
+	${COMPOSE_RUN} make _test-backend-unit
+
+_test-backend-unit:
+	cd backend && python -m pytest tests/unit -v && cd ..
+
+build-backend: synth
 
 _run-backend-invoke _backend-invoke _invoke:
 	cd backend && sam local invoke BackendFunction -t ../infrastructure/template.yaml && cd ..
