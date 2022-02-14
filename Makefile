@@ -119,7 +119,10 @@ _build-backend:
 _run-backend-invoke _backend-invoke _invoke:
 	cd backend && sam local invoke BackendFunction -t ../infrastructure/template.yaml && cd ..
 
-_run-backend _start-api:
+_kill-sam:
+	killall -9 sam || echo "SAM was not already running... starting SAM"
+
+_run-backend _start-api: _kill-sam
 	cd backend && sam local start-api -p 3001 -t ../infrastructure/template.yaml && cd ..
 
 #############

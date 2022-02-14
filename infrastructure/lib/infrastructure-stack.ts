@@ -95,9 +95,12 @@ export class InfrastructureStack extends Stack {
     //-----------------------//
     // https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_sam-readme.html
     const backendFunction = new serverless.CfnFunction(this, 'BackendFunction',{
-      packageType: 'Image',
+      // packageType: 'Image',
+      handler: 'app.lambda_handler',
+      runtime: 'python3.9',
+      codeUri: '../backend/hello_world/',
       architectures: ['x86_64'],
-      imageUri: 'helloworldfunction:python3.9-v1',
+      // imageUri: 'helloworldfunction:python3.9-v1',
       events: {
         HelloWorld: {
           properties: {
@@ -111,9 +114,9 @@ export class InfrastructureStack extends Stack {
         },
       }
     })
-    backendFunction.addMetadata('Dockerfile', 'Dockerfile');
-    backendFunction.addMetadata('DockerContext', './hello_world');
-    backendFunction.addMetadata('DockerTag', 'python3.9-v1');
+    // backendFunction.addMetadata('Dockerfile', 'Dockerfile');
+    // backendFunction.addMetadata('DockerContext', './hello_world');
+    // backendFunction.addMetadata('DockerTag', 'python3.9-v1');
 
   }
 }

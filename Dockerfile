@@ -1,10 +1,12 @@
 FROM mcr.microsoft.com/playwright:focal
 
-#Install NodeJS and CDK
+#Install Deps
 RUN apt-get update && apt-get install -y \
     make \
+    python3.9\
     software-properties-common \
     && npm install -g aws-cdk ts-node \
+    && pip install pip \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app

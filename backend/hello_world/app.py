@@ -1,6 +1,5 @@
 import json
 
-
 def lambda_handler(event, context):
     """Sample pure Lambda function
 
@@ -23,11 +22,24 @@ def lambda_handler(event, context):
         Return doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html
     """
 
+    # try:
+    #     ip = requests.get("http://checkip.amazonaws.com/")
+    # except requests.RequestException as e:
+    #     # Send some context about this error to Lambda Logs
+    #     print(e)
+
+    #     raise e
+
+    user_count = 0
+
+    def get_user_count(user_count):
+        user_count +=1
+        return user_count
+
     return {
         "statusCode": 200,
-        "body": json.dumps(
-            {
-                "message": "hello world",
-            }
-        ),
+        "body": json.dumps({
+            "message": "User count: " + str(get_user_count(user_count)),
+            # "location": ip.text.replace("\n", "")
+        }),
     }
