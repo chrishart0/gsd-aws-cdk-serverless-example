@@ -9,7 +9,7 @@ test.describe('Front page, non-interactive tests', () => {
 
   test('header appears as expected', async ({ page }) => {    
     await expect(page.locator('.header')).toBeVisible();
-    await expect(page.locator('text="Primary Heading"')).toBeVisible();
+    await expect(page.locator('text="Welcome to this demo site!"')).toBeVisible();
   });
 
   test('footer appears as expected', async ({ page }) => {    

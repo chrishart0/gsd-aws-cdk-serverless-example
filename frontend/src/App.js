@@ -32,10 +32,14 @@ function App() {
       <header className="App-header">
         <Container className='header' maxWidth='md'>
           <Typography variant='h2'>
-            Primary Heading
+            Welcome to this demo site!
           </Typography>
-          <Typography variant='h3'>
-            SubHeading
+          <Typography variant='h5'>
+          Made with the S3, Lambda, and DDB stack
+          </Typography>
+          <br/>
+          <Typography>
+          This demo shows how to use a static site hosted in S3, a Lambda function + APG, and DynamoDB. All testing locally and in the CI/CD.
           </Typography>
           <br/>
           <Typography className='footer'> <a href='https://github.com/chrishart0/gsd-aws-cdk-serverless-example' target="_blank" rel="noreferrer">
