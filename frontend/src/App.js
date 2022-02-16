@@ -38,10 +38,6 @@ function App() {
             SubHeading
           </Typography>
           <br/>
-          <Typography variant='h3'>
-            Maps and Other Useful things
-          </Typography>
-          <br/>
           <Typography className='footer'> <a href='https://github.com/chrishart0/gsd-aws-cdk-serverless-example' target="_blank" rel="noreferrer">
             <img height={20} src={githubLogo} alt='Logo'/>
             Edit on Github!

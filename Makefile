@@ -17,14 +17,14 @@ help:
 is-built: 
 	if [ ! -d ./frontend/build ]; then make build; fi
 
-prep-env:
-	${COMPOSE_RUN} make _prep-env
+# prep-env:
+# 	${COMPOSE_RUN} make _prep-env
 
 _prep-env:
-	if [ -s configs.env ]; then \
-		echo "No configs.env file found, genereating from env variables"\
-		touch configs.env \
-		
+	if [ ! -d ./configs.env ]; then \
+		echo "No configs.env file found, genereating from env variables"; \
+		touch configs.env; \
+		echo "REACT_APP_USER_API_URL_LOCAL_SAM=http://localhost:3001/users" >> configs.env; \
 	fi
 
 # subDomain=test
@@ -45,7 +45,7 @@ pre-reqs: _prep-cache build-container container-info _test-install-e2e-headful
 
 # These commands run processes acorss the mulitple layers of the project
 .PHONY: install
-install npm-install: prep-env install-infra install-frontend install-e2e install-backend
+install npm-install: _prep-env install-infra install-frontend install-e2e install-backend
 
 .PHONY: test
 test: test-frontend test-e2e test-infra

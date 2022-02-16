@@ -4,9 +4,37 @@
 ## Why?
 Three Musketeers pattern allows for ease of setup and better developer experience for this complicated local testing environment, with the added benefit of using the same local commands for the CI/CD.
 
+# First Time Use
 ## Setup
-Make sure to configure the following parameters locally before developing
+## Configuration! 
+In the root of this repo make a file called `configs.env` and fill it out as show below but replacing the example values.
+```
+domain=site.EXAMPLE.com
+hostedZoneName=EXAMPLE.com
+hostedZoneId=123ASDFGH456AQWER34T4V1C
+REACT_APP_USER_API_DOMAIN=api.site.EXAMPLE.com
+REACT_APP_USER_API_URL_LOCAL_SAM=http://localhost:3001/users
+```
 
+*Note: leave REACT_APP_USER_API_URL_LOCAL_SAM alone unless you have good reason to change it*
+
+## Start it up locally
+### `make run`
+This will start the react frontend, Lambda Backend, and DynamoDB
+
+## Test it locally
+### `make test`
+This will run a suite of test
+
+### `make test-frontend-interactive`
+Starts up the jest test running in interactive mode, running `npm test` inside the container
+
+### `make test-e2e`
+This will use playwright to run the end-to-end tests found in [e2e](./e2e/test.spec.ts)
+
+**Tip:** Make sure to use `ctrl+c` when stopping any of the running commands so the containers exit gracefully
+
+# More Details
 ## Working with the frontend
 
 ### Dependencies
