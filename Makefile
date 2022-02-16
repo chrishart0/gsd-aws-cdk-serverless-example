@@ -51,18 +51,24 @@ pre-reqs: _prep-cache build-container container-info _test-install-e2e-headful
 
 # These commands run processes acorss the mulitple layers of the project
 .PHONY: install
-install npm-install: _prep-env install-infra install-frontend install-e2e install-backend
+install npm-install: _prep-env install-infra install-frontend install-e2e install-backend synth
 
 .PHONY: test
 test: test-frontend test-e2e test-infra
 
 .PHONY: run
-run: _launch-browser
+run: _prep-env _launch-browser
 	${COMPOSE_UP_FULL_STACK}
 
 ################
 ### Frontend ###
 ################
+
+check-frontend-installed: 
+	${COMPOSE_RUN} make _check-frontend-installed
+
+_check-frontend-installed:
+	if [ ! -d ./frontend/node_modules ]; then make install-frontend; fi
 
 .PHONY: install-frontend
 install-frontend: 
@@ -136,6 +142,12 @@ _clear-cache-backend:
 	rm -rf backend/.venv/
 	rm -rf backend/.pytest_cache/
 
+check-backend-installed: 
+	${COMPOSE_RUN} make _check-backend-installed
+
+_check-backend-installed:
+	if [ ! -d ./backend/.venv ]; then make install-backend; fi
+
 .PHONY: install-backend
 install-backend: 
 	${COMPOSE_RUN} make _install-backend
@@ -165,7 +177,7 @@ _kill-sam:
 
 #ToDo: check for template.yaml, build if not exist
 #ToDo: Add warning to update make synth on CDK changes
-run-backend: 
+run-backend: check-infra-synthed
 	${COMPOSE_UP_BACKEND}
 # ${COMPOSE_RUN_SAM} make _run-backend
 
@@ -198,6 +210,7 @@ _install-infra:
 
 _prep-cache: #This resolves Error: EACCES: permission denied, open 'cdk.out/tree.json'
 	mkdir -p infrastructure/cdk.out/
+	if [ ! -f ./infrastructure/cdk.out/tree.json ]; then touch infrastructure/cdk.out/tree.json; fi
 
 test-infra:
 	${COMPOSE_RUN} make _test-infra
@@ -210,6 +223,12 @@ down:
 
 clear-cache:
 	${COMPOSE_RUN} rm -rf ${CDK_DIR}cdk.out && rm -rf ${CDK_DIR}node_modules
+
+check-infra-synthed: 
+	${COMPOSE_RUN} make _check-infra-synthed
+
+_check-infra-synthed:
+	if [ ! -f ./infrastructure/template.yaml ]; then make synth; fi
 
 synth: _prep-cache is-built
 	${COMPOSE_RUN} make _synth

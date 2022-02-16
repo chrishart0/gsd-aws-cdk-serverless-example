@@ -19,6 +19,9 @@ REACT_APP_USER_API_URL_LOCAL_SAM=http://localhost:3001/users
 *Note: leave REACT_APP_USER_API_URL_LOCAL_SAM alone unless you have good reason to change it*
 
 ## Start it up locally
+### `make install`
+Install needed dependencies 
+
 ### `make run`
 This will start the react frontend, Lambda Backend, and DynamoDB
 
