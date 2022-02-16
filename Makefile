@@ -7,7 +7,7 @@ COMPOSE_UP_FRONTEND = docker-compose up frontend
 COMPOSE_UP_BACKEND = docker-compose up dynamodb sam
 COMPOSE_RUN_PLAYWRIGHT = docker-compose run --rm playwright
 COMPOSE_UP = docker-compose up base
-PROFILE = --profile personal
+PROFILE = --profile default
 
 .DEFAULT_GOAL := help
 
@@ -45,13 +45,13 @@ pre-reqs: _prep-cache build-container container-info _test-install-e2e-headful
 
 # These commands run processes acorss the mulitple layers of the project
 .PHONY: install
-install npm-install: install-infra install-frontend install-e2e install-backend
+install npm-install: prep-env install-infra install-frontend install-e2e install-backend
 
 .PHONY: test
 test: test-frontend test-e2e test-infra
 
 .PHONY: run
-run: 
+run: _launch-browser
 	${COMPOSE_UP_FULL_STACK}
 
 ################
