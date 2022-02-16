@@ -21,7 +21,7 @@ is-built:
 # 	${COMPOSE_RUN} make _prep-env
 
 _prep-env:
-	if [ ! -d ./configs.env ]; then \
+	if [ ! -f ./configs.env ]; then \
 		echo "No configs.env file found, genereating from env variables"; \
 		touch configs.env; \
 		echo "REACT_APP_USER_API_URL_LOCAL_SAM=http://localhost:3001/users" >> configs.env; \
@@ -126,11 +126,16 @@ _ci:
 _prep-venv:
 	python3 -m venv backend/.venv
 
+_clear-cache-backend:
+	rm -rf backend/.venv/
+	rm -rf backend/.pytest_cache/
+
 .PHONY: install-backend
 install-backend: 
 	${COMPOSE_RUN} make _install-backend
 
 _install-backend:
+	python3 -m venv backend/.venv
 	source backend/.venv/bin/activate
 	pip install -r backend/tests/requirements.txt
 

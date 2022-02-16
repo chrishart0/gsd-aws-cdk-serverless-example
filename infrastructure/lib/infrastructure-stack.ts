@@ -18,9 +18,9 @@ export class InfrastructureStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
     
-    const hostedZoneId:string = process.env.hostedZoneId!
-    const hostedZoneName:string = process.env.hostedZoneName!
-    const siteDomain:string = process.env.domain!
+    const hostedZoneId:string = process.env.THREE_M_HOSTED_ZONE_ID!
+    const hostedZoneName:string = process.env.REACT_APP_USER_API_DOMAIN!
+    const siteDomain:string = process.env.THREE_M_DOMAIN!
     const apiDomain = 'api.' + siteDomain
 
     const zone = route53.HostedZone.fromHostedZoneAttributes(this, 'zone', {
