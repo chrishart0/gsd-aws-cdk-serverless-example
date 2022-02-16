@@ -92,6 +92,9 @@ Uses npm ci, which is the prefered build command for us in CI pipelines, as it i
 
 Note: Each time you run `make deploy` the frontend will be rebuilt and redeployed. If you know no changes to the frontend were made then run `make deploy-no-build`
 
+## Other Tips and Configurations
+* Configure AWS Profile by editing the profile variable in the Makefile
+
 # Goals
 It's hard to maintain and locally test serverless envs.
 

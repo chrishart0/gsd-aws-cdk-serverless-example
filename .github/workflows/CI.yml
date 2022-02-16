@@ -62,3 +62,6 @@ jobs:
 
     - name: Infra Unit Tests
       run: make test-infra
+
+    - name: Deploy
+      run: make deploy
