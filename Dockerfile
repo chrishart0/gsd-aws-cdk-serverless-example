@@ -1,25 +1,26 @@
 FROM mcr.microsoft.com/playwright:focal
 
-#Install NodeJS and CDK
+WORKDIR /app
+
+#Figure out a better way of handling getting the python reqs installed
+COPY backend/tests/requirements.txt /tmp
+
+#Install CDK and Frontend
 RUN apt-get update && apt-get install -y \
     make \
     software-properties-common \
-    && npm install -g aws-cdk ts-node \
-    && rm -rf /var/lib/apt/lists/*
+    && npm install -g aws-cdk ts-node
 
-WORKDIR /app
+# Install deps for SAM Backend
+RUN apt-get install -y \
+    python3.9 \
+    python3.8-venv python3.9-venv \
+    && pip install pip \
+    && pip install awscli aws-sam-cli==1.12.0 \
+    && pip install -r /tmp/requirements.txt \
+    && rm -rf /var/lib/apt/lists/*
 
 # we are able to override the CMD instruction and execute any command successfully. 
 # However, while we were successful, this process of overriding the CMD instruction 
 # is rather clunky.
 CMD ["make", "_run"]
-
-# The ENTRYPOINT instruction works very similarly to CMD 
-# in that it is used to specify the command executed when the container is started. 
-# However, where it differs is that ENTRYPOINT doesn't allow you to override the command.
-# ENTRYPOINT ["make", "_run"]
-
-
-# # Use uid 1001 who owns $HOME in GH Actions runtime
-# # See why: https://github.com/arjun27/playwright-github-actions/issues/1
-# USER 1001

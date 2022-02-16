@@ -4,10 +4,37 @@
 ## Why?
 Three Musketeers pattern allows for ease of setup and better developer experience for this complicated local testing environment, with the added benefit of using the same local commands for the CI/CD.
 
-
+# First Time Use
 ## Setup
-Make sure to configure the following parameters locally before developing
+## Configuration! 
+In the root of this repo make a file called `configs.env` and fill it out as show below but replacing the example values.
+```
+domain=site.EXAMPLE.com
+hostedZoneName=EXAMPLE.com
+hostedZoneId=123ASDFGH456AQWER34T4V1C
+REACT_APP_USER_API_DOMAIN=api.site.EXAMPLE.com
+REACT_APP_USER_API_URL_LOCAL_SAM=http://localhost:3001/users
+```
 
+*Note: leave REACT_APP_USER_API_URL_LOCAL_SAM alone unless you have good reason to change it*
+
+## Start it up locally
+### `make run`
+This will start the react frontend, Lambda Backend, and DynamoDB
+
+## Test it locally
+### `make test`
+This will run a suite of test
+
+### `make test-frontend-interactive`
+Starts up the jest test running in interactive mode, running `npm test` inside the container
+
+### `make test-e2e`
+This will use playwright to run the end-to-end tests found in [e2e](./e2e/test.spec.ts)
+
+**Tip:** Make sure to use `ctrl+c` when stopping any of the running commands so the containers exit gracefully
+
+# More Details
 ## Working with the frontend
 
 ### Dependencies
@@ -24,7 +51,6 @@ $ npm install --save-dev playwright
 # Exit the Container
 $exit
 ```
-
 
 ## Testing
 There are three kinds of tests included in this repo:
@@ -58,6 +84,13 @@ Standard `npm run build` command
 #### `make ci`
 Uses npm ci, which is the prefered build command for us in CI pipelines, as it is faster and more stable. 
 
+## Deploying
+
+* Ensure the config.env file is configured
+* Run `make diff` and review the changes
+* Run `make deploy`
+
+Note: Each time you run `make deploy` the frontend will be rebuilt and redeployed. If you know no changes to the frontend were made then run `make deploy-no-build`
 
 # Goals
 It's hard to maintain and locally test serverless envs.
@@ -85,7 +118,7 @@ A non-exhaustive list of items left to be addressed.
   * ~~Add check to run `make build` prior to `make synth` or `make diff` or `make deploy` only if build files not detected~~
   * ~~CDK better env var handling. Need valid way to maintain on local without risk of commiting and entering in vars through CI/CD (Reference here make: https://github.com/contino/gsd-hello-world)~~
 * ~~Always run a `make build` before `make deploy`~~
-* Add `make synth` and cdk testing to github actions
+* ~~Add `make synth` and cdk testing to github actions~~
 * Testing
   * ~~Make CDK tests pass and add to make `cdk test` file~~
   * ~~Right now `make test` only runs frontend jest tests, `make test` should run all tests (currently only frontend jest tests and infra CDK tests)~~
@@ -93,6 +126,8 @@ A non-exhaustive list of items left to be addressed.
   * ~~Add end to end testing with playwright~~
     * ~~Ensure it runs in CI~~
 * For _launch-browser command instead of wait 10 seconds, wait for site to be loaded
+* Add xray integration
+* Make a CloudWatch dashboard
 
 * Quality Scan: Add <https://www.sonarqube.org/downloads/> community edition to CI/CD. Use [this](https://github.com/contino/gsd-hello-world/blob/main/.github/workflows/quality.yml) as reference
 
@@ -104,7 +139,6 @@ A non-exhaustive list of items left to be addressed.
   * Investiagte prebuilding containers for faster CI/CD
 
 * Lambda API
-  * Setup basic lambda function in CDK infra
+  * ~~Setup basic lambda function in CDK infra~~
   * Add unit tests to lambda function
-  * Add these things to make
-  * Add local DynamoDB Container
+  * ~~Add local DynamoDB Container~~
