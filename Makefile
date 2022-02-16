@@ -51,11 +51,11 @@ cli: _prep-cache
 ################
 # Core Commands#
 ################
-pre-reqs: _prep-cache build-container container-info _test-install-e2e-headful
+# pre-reqs: _prep-cache build-container container-info _test-install-e2e-headful
 
 # These commands run processes acorss the mulitple layers of the project
 .PHONY: install
-install npm-install: _prep-env install-infra install-frontend install-e2e install-backend synth
+install npm-install: _prep-env build-container install-infra install-frontend install-e2e install-backend synth
 
 .PHONY: test
 test: test-frontend test-e2e test-infra

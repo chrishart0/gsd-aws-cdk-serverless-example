@@ -1,12 +1,22 @@
 # GSD-AWS-CDK-Serverless-Example
 [![CI](https://github.com/chrishart0/gsd-aws-cdk-serverless-example/actions/workflows/CI.yml/badge.svg)](https://github.com/chrishart0/gsd-aws-cdk-serverless-example/actions/workflows/CI.yml)
 
+Live Demo: [awsdemo.chrishart.cloud](https://awsdemo.chrishart.cloud/)
+
 ## Why?
-Three Musketeers pattern allows for ease of setup and better developer experience for this complicated local testing environment, with the added benefit of using the same local commands for the CI/CD.
+Local AWS development can be tough to get right, especially when it comes to local testing. This repo will attempt to demo how to easily use S3 for a static front end, Lambda + API Gateway for a logic tier, and DynamoDB for a persistance tier. All while still being able to easily test everything locally.
+
+The best part? Initial setup only takes a few minutes, most of which is waiting for dependencies to install. You don't even need to configure anything to get started! (Assuming you have docker and docker-compose installed.)
+
+This repo uses a pattern called [Three Musketeers](https://www.drewkhoury.com/post/gsd/3-musketeers-for-an-epic-developer-experience-8676ddaf33b2/), which provides for ease of setup and a better developer experience for this complicated local testing environment, with the added benefit of using the same local commands for the CI/CD.
 
 # First Time Use
 ## Setup
+Ensure you have Docker, Docker-Compose, and Make installed. 
+
 ## Configuration! 
+*You can skip this step if you want to test locally and wait until you are ready to deploy to do the configs.*
+
 In the root of this repo make a file called `configs.env` and fill it out as show below but replacing the example values.
 ```
 domain=site.EXAMPLE.com
