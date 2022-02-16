@@ -42,12 +42,12 @@ jobs:
         make install
 
     - name: Frontend Unit Tests
-      run: make test-frontend
+      run: make run > /dev/null 2>&1 &
       
     - name: Local e2e test
       run: | 
         make run-frontend-daemon
-        make test-e2e
+        make test-e2e-ci
 
     - name: Build
       run: make ci

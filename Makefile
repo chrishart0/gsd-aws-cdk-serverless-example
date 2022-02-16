@@ -253,12 +253,18 @@ test-e2e:
 	${COMPOSE_RUN_PLAYWRIGHT} make _test-e2e
 
 _test-e2e:
-	cd e2e && npx playwright test && cd .. 
+	cd e2e && npx playwright test --output ../test_results/ && cd .. 
+
+test-e2e-ci:
+	${COMPOSE_RUN_PLAYWRIGHT} make _test-e2e-ci
+
+_test-e2e-ci:
+	cd e2e && export CI=true && npx playwright test --output ../test_results/ && cd .. 
 
 #Running e2e tests locally in a browser cannot be done via a container, if you want to run e2e tests headfully(in browser) then run this command
 .PHONY: _test-install-e2e-headful
 _test-install-e2e-headful:
-	cd e2e && npx playwright install-deps && cd ..
+	cd e2e &&  npx playwright install-deps && cd ..
 
 #ToDo: Figure out how to specify a directory for npx https://github.com/npm/npx/issues/74#issuecomment-676092733
 #ToDo: Ensure frontend is up and running
