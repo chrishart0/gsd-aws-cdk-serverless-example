@@ -4,7 +4,6 @@
 ## Why?
 Three Musketeers pattern allows for ease of setup and better developer experience for this complicated local testing environment, with the added benefit of using the same local commands for the CI/CD.
 
-
 ## Setup
 Make sure to configure the following parameters locally before developing
 
@@ -24,7 +23,6 @@ $ npm install --save-dev playwright
 # Exit the Container
 $exit
 ```
-
 
 ## Testing
 There are three kinds of tests included in this repo:
@@ -58,6 +56,13 @@ Standard `npm run build` command
 #### `make ci`
 Uses npm ci, which is the prefered build command for us in CI pipelines, as it is faster and more stable. 
 
+## Deploying
+
+* Ensure the config.env file is configured
+* Run `make diff` and review the changes
+* Run `make deploy`
+
+Note: Each time you run `make deploy` the frontend will be rebuilt and redeployed. If you know no changes to the frontend were made then run `make deploy-no-build`
 
 # Goals
 It's hard to maintain and locally test serverless envs.
@@ -93,6 +98,8 @@ A non-exhaustive list of items left to be addressed.
   * ~~Add end to end testing with playwright~~
     * ~~Ensure it runs in CI~~
 * For _launch-browser command instead of wait 10 seconds, wait for site to be loaded
+* Add xray integration
+* Make a CloudWatch dashboard
 
 * Quality Scan: Add <https://www.sonarqube.org/downloads/> community edition to CI/CD. Use [this](https://github.com/contino/gsd-hello-world/blob/main/.github/workflows/quality.yml) as reference
 
@@ -106,4 +113,4 @@ A non-exhaustive list of items left to be addressed.
 * Lambda API
   * ~~Setup basic lambda function in CDK infra~~
   * Add unit tests to lambda function
-  * Add local DynamoDB Container
+  * ~~Add local DynamoDB Container~~

@@ -2,9 +2,12 @@ SHELL=/bin/bash
 CDK_DIR=infrastructure/
 COMPOSE_RUN = docker-compose run --rm base
 COMPOSE_RUN_WITH_PORTS = docker-compose run -d --name base --service-ports --rm base
+COMPOSE_UP_FULL_STACK = docker-compose up dynamodb sam frontend
+COMPOSE_UP_FRONTEND = docker-compose up frontend
+COMPOSE_UP_BACKEND = docker-compose up dynamodb sam
 COMPOSE_RUN_PLAYWRIGHT = docker-compose run --rm playwright
 COMPOSE_UP = docker-compose up base
-PROFILE = --profile default
+PROFILE = --profile personal
 
 .DEFAULT_GOAL := help
 
@@ -19,8 +22,15 @@ prep-env:
 
 _prep-env:
 	if [ -s configs.env ]; then \
+		echo "No configs.env file found, genereating from env variables"\
 		touch configs.env \
+		
 	fi
+
+# subDomain=test
+# domain=christianhart.io
+# hostedZoneName=christianhart.io
+# hostedZoneId=Z04653531OVXYWTMNZ037
 
 build-container: 
 	docker-compose build
@@ -41,7 +51,8 @@ install npm-install: install-infra install-frontend install-e2e install-backend
 test: test-frontend test-e2e test-infra
 
 .PHONY: run
-run: run-frontend
+run: 
+	${COMPOSE_UP_FULL_STACK}
 
 ################
 ### Frontend ###
@@ -86,7 +97,7 @@ test-frontend-interactive:
 	${COMPOSE_RUN} make _test-frontend-interactive
 
 _test-frontend-interactive:
-	npm test --prefix frontend/ &
+	npm test --prefix frontend/
 
 .PHONY: build
 build: 
@@ -135,14 +146,33 @@ _test-backend-unit:
 
 build-backend: synth
 
-_run-backend-invoke _backend-invoke _invoke:
-	cd backend && sam local invoke BackendFunction -t ../infrastructure/template.yaml && cd ..
+# _run-backend-invoke _backend-invoke _invoke:
+# 	cd backend && sam local invoke BackendFunction -t ../infrastructure/template.yaml && cd ..
 
 _kill-sam:
 	killall -9 sam || echo "SAM was not already running... starting SAM"
 
+#ToDo: check for template.yaml, build if not exist
+#ToDo: Add warning to update make synth on CDK changes
+run-backend: 
+	${COMPOSE_UP_BACKEND}
+# ${COMPOSE_RUN_SAM} make _run-backend
+
 _run-backend _start-api: _kill-sam
-	cd backend && sam local start-api -p 3001 -t ../infrastructure/template.yaml && cd ..
+	cd backend && sam local start-api -p 3001 -t ../infrastructure/template.yaml --docker-volume-basedir /home/chris/git/gsd-aws-cdk-serverless-example/backend --host 0.0.0.0 --env-vars sam_local_environment_variables.json --docker-network aws_backend && cd ..
+
+# cd backend && sam local start-api -p 3001 -t ../infrastructure/template.yaml --docker-volume-basedir /home/chris/git/gsd-aws-cdk-serverless-example/backend  --container-host host.docker.internal --host 0.0.0.0 --warm-containers EAGER --debug && cd ..
+
+
+# sam local start-api \
+#     --host 0.0.0.0 \
+# 	--port 3001 \
+# 	-t ../infrastructure/template.yaml \
+#     --container-host-interface 0.0.0.0 \
+#     --container-host host.docker.internal \
+#     --debug \
+#     --docker-volume-basedir $PWD 
+# cd backend && sam local start-api -p 3001 -t ../infrastructure/template.yaml --host 0.0.0.0 --debug && cd .. # Works with old SAM version
 
 #############
 ### Infra ###
@@ -165,7 +195,7 @@ _test-infra:
 	npm test --prefix infrastructure/ 
 
 down:
-	docker-compose down --remove-orphans
+	docker-compose down --remove-orphans --volume
 
 clear-cache:
 	${COMPOSE_RUN} rm -rf ${CDK_DIR}cdk.out && rm -rf ${CDK_DIR}node_modules
@@ -183,6 +213,9 @@ _bootstrap:
 	cd ${CDK_DIR} && cdk bootstrap ${PROFILE}
 
 deploy: _prep-cache build
+	${COMPOSE_RUN} make _deploy 
+
+deploy-no-build: _prep-cache
 	${COMPOSE_RUN} make _deploy 
 
 _deploy: 
