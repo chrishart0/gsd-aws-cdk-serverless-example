@@ -27,6 +27,12 @@ _prep-env:
 		echo "REACT_APP_USER_API_URL_LOCAL_SAM=http://localhost:3001/users" >> configs.env; \
 	fi
 
+_prep-env-ci:
+	echo "THREE_M_DOMAIN=${THREE_M_DOMAIN}" >> configs.env; \
+	echo "THREE_M_HOSTED_ZONE_NAME=${THREE_M_HOSTED_ZONE_NAME}" >> configs.env; \
+	echo "THREE_M_HOSTED_ZONE_ID=${THREE_M_HOSTED_ZONE_ID}" >> configs.env; \
+	echo "REACT_APP_USER_API_DOMAIN=${REACT_APP_USER_API_DOMAIN}" >> configs.env; \
+
 # subDomain=test
 # domain=christianhart.io
 # hostedZoneName=christianhart.io

@@ -36,6 +36,10 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_REGION }}
 
+    - name: Prep Configs
+      run: | 
+        make _prep-env-ci
+        cat configs.env
 
     - name: Install
       run: |
