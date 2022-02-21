@@ -4,7 +4,7 @@
 Live Demo: [awsdemo.chrishart.cloud](https://awsdemo.chrishart.cloud/)
 
 ## Why?
-Local AWS development can be tough to get right, especially when it comes to local testing. This repo will attempt to demo how to easily use S3 for a static front end, Lambda + API Gateway for a logic tier, and DynamoDB for a persistance tier. All while still being able to easily test everything locally.
+Local AWS development can be tough to get right, especially when it comes to local testing. This repo demonstrates how to easily use S3 for a static front end, Lambda + API Gateway for a logic tier, and DynamoDB for a persistance tier - all while still being able to easily test everything locally.
 
 The best part? Initial setup only takes a few minutes, most of which is waiting for dependencies to install. You don't even need to configure anything to get started! (Assuming you have docker and docker-compose installed.)
 
@@ -12,9 +12,9 @@ This repo uses a pattern called [Three Musketeers](https://www.drewkhoury.com/po
 
 # First Time Use
 ## Setup
-Ensure you have Docker, Docker-Compose, and Make installed. 
+Ensure you have `docker`, `docker-compose`, and `make` installed. 
 
-## Configuration! 
+## Configuration 
 *You can skip this step if you want to test locally and wait until you are ready to deploy to do the configs.*
 
 In the root of this repo make a file called `configs.env` and fill it out as show below but replacing the example values.
@@ -26,24 +26,21 @@ REACT_APP_USER_API_DOMAIN=api.site.EXAMPLE.com
 REACT_APP_USER_API_URL_LOCAL_SAM=http://localhost:3001/users
 ```
 
-*Note: leave REACT_APP_USER_API_URL_LOCAL_SAM alone unless you have good reason to change it*
+*Note: You should not have to change `REACT_APP_USER_API_URL_LOCAL_SAM` as the demo is designed to work on `localhost:3001`.*
 
 ## Start it up locally
-### `make install`
-Install needed dependencies 
 
-### `make run`
-This will start the react frontend, Lambda Backend, and DynamoDB
+`make install` - Install needed dependencies 
+
+`make run` - This will start the react frontend, Lambda Backend, and DynamoDB
 
 ## Test it locally
-### `make test`
-This will run a suite of test
 
-### `make test-frontend-interactive`
-Starts up the jest test running in interactive mode, running `npm test` inside the container
+`make test` - This will run a suite of test
 
-### `make test-e2e`
-This will use playwright to run the end-to-end tests found in [e2e](./e2e/test.spec.ts)
+`make test-frontend-interactive` - Starts up the jest test running in interactive mode, running `npm test` inside the container
+
+`make test-e2e` - This will use playwright to run the end-to-end tests found in [e2e](./e2e/test.spec.ts)
 
 **Tip:** Make sure to use `ctrl+c` when stopping any of the running commands so the containers exit gracefully
 
@@ -71,31 +68,25 @@ There are three kinds of tests included in this repo:
 * [Frontend Unit Tests](frontend/src/App.test.js)
 * [AWS CDK Infrastructure Unit Tests:](infrastructure/test/infrastructure.test.ts) find docs [here](https://docs.aws.amazon.com/cdk/v2/guide/testing.html)
 
-### `make test`
-Run all tests: currently frontend unit and e2e
+`make test` - Run all tests: currently frontend unit and e2e
 
-### `make test-frontend`
-Runs `npm test` in CI mode, which simply outputs the results of the tests once.
+`make test-frontend` - Runs `npm test` in CI mode, which simply outputs the results of the tests once.
 
-### `make test-frontend-interactive`
-Starts up the jest test running in interactive mode, running `npm test` inside the container
+`make test-frontend-interactive` - Starts up the jest test running in interactive mode, running `npm test` inside the container
 
 ### End to End Testing
 
-#### `make test-e2e`
-Run e2e tests inside a container headless
+`make test-e2e` - Run e2e tests inside a container headless
 
-#### `_test-install-e2e-headful`
-Install needed pre-reqs for running headful e2e tests locally
+`_test-install-e2e-headful` - Install needed pre-reqs for running headful e2e tests locally
 
-#### `_test-e2e-headful`
+`_test-e2e-headful` - Run headful e2e tests locally
 
 ### Building
-#### `make build`
-Standard `npm run build` command
 
-#### `make ci`
-Uses npm ci, which is the prefered build command for us in CI pipelines, as it is faster and more stable. 
+`make build` - Standard `npm run build` command
+
+`make ci` - Uses npm ci, which is the prefered build command for us in CI pipelines, as it is faster and more stable. 
 
 ## Deploying
 
