@@ -37,11 +37,6 @@ _prep-env-ci:
 	echo "THREE_M_HOSTED_ZONE_ID=${THREE_M_HOSTED_ZONE_ID}" >> configs.env; \
 	echo "REACT_APP_USER_API_DOMAIN=${REACT_APP_USER_API_DOMAIN}" >> configs.env; \
 
-# subDomain=test
-# domain=christianhart.io
-# hostedZoneName=christianhart.io
-# hostedZoneId=Z04653531OVXYWTMNZ037
-
 build-container: 
 	docker-compose build
 
@@ -51,7 +46,6 @@ cli: _prep-cache
 ################
 # Core Commands#
 ################
-# pre-reqs: _prep-cache build-container container-info _test-install-e2e-headful
 
 # These commands run processes acorss the mulitple layers of the project
 .PHONY: install
@@ -173,9 +167,6 @@ _test-backend-unit:
 
 build-backend: synth
 
-# _run-backend-invoke _backend-invoke _invoke:
-# 	cd backend && sam local invoke BackendFunction -t ../infrastructure/template.yaml && cd ..
-
 _kill-sam:
 	killall -9 sam || echo "SAM was not already running... starting SAM"
 
@@ -183,10 +174,73 @@ _kill-sam:
 #ToDo: Add warning to update make synth on CDK changes
 run-backend: check-infra-synthed
 	${COMPOSE_UP_BACKEND}
-# ${COMPOSE_RUN_SAM} make _run-backend
 
 _run-backend _start-api: _kill-sam
-	cd backend && sam local start-api -p 3001 -t ../infrastructure/template.yaml --docker-volume-basedir /home/chris/git/gsd-aws-cdk-serverless-example/backend --host 0.0.0.0 --env-vars sam_local_environment_variables.json --docker-network aws_backend && cd ..
+	cd backend && sam local start-api -p 3001 -t ../#############
+### Infra ###
+#############
+
+.PHONY: install-infra
+install-infra npm-install-infra: 
+	${COMPOSE_RUN} make _install-infra
+
+_install-infra:
+	npm install --prefix ${CDK_DIR}/
+
+_prep-cache: #This resolves Error: EACCES: permission denied, open 'cdk.out/tree.json'
+	mkdir -p ${CDK_DIR}/cdk.out/
+	if [ ! -f ./${CDK_DIR}/cdk.out/tree.json ]; then touch ${CDK_DIR}/cdk.out/tree.json; fi
+
+test-infra:
+	${COMPOSE_RUN} make _test-infra
+
+_test-infra:
+	npm test --prefix ${CDK_DIR}/ 
+
+down:
+	docker-compose down --remove-orphans --volume
+
+clear-cache:
+	${COMPOSE_RUN} rm -rf ${CDK_DIR}cdk.out && rm -rf ${CDK_DIR}node_modules
+
+check-infra-synthed: 
+	${COMPOSE_RUN} make _check-infra-synthed
+
+_check-infra-synthed:
+	if [ ! -f ./${CDK_DIR}/template.yaml ]; then make synth; fi
+
+synth: _prep-cache is-built
+	${COMPOSE_RUN} make _synth
+
+_synth:
+	cd ${CDK_DIR} && cdk synth --no-staging ${PROFILE} > template.yaml
+
+bootstrap: _prep-cache
+	${COMPOSE_RUN} make _bootstrap
+
+_bootstrap:
+	cd ${CDK_DIR} && cdk bootstrap ${PROFILE}
+
+deploy: _prep-cache build
+	${COMPOSE_RUN} make _deploy 
+
+deploy-no-build: _prep-cache
+	${COMPOSE_RUN} make _deploy 
+
+_deploy: 
+	cd ${CDK_DIR} && cdk deploy --require-approval never ${PROFILE}
+
+destroy:
+	${COMPOSE_RUN} make _destroy
+
+_destroy:
+	cd ${CDK_DIR} && cdk destroy --force ${PROFILE}
+
+diff: _prep-cache is-built
+	${COMPOSE_RUN} make _diff
+
+_diff: _prep-cache
+	cd ${CDK_DIR} && cdk diff ${PROFILE}/template.yaml --docker-volume-basedir /home/chris/git/gsd-aws-cdk-serverless-example/backend --host 0.0.0.0 --env-vars sam_local_environment_variables.json --docker-network aws_backend && cd ..
 
 # cd backend && sam local start-api -p 3001 -t ../infrastructure/template.yaml --docker-volume-basedir /home/chris/git/gsd-aws-cdk-serverless-example/backend  --container-host host.docker.internal --host 0.0.0.0 --warm-containers EAGER --debug && cd ..
 
@@ -210,17 +264,17 @@ install-infra npm-install-infra:
 	${COMPOSE_RUN} make _install-infra
 
 _install-infra:
-	npm install --prefix infrastructure/
+	npm install --prefix ${CDK_DIR}/
 
 _prep-cache: #This resolves Error: EACCES: permission denied, open 'cdk.out/tree.json'
-	mkdir -p infrastructure/cdk.out/
-	if [ ! -f ./infrastructure/cdk.out/tree.json ]; then touch infrastructure/cdk.out/tree.json; fi
+	mkdir -p ${CDK_DIR}/cdk.out/
+	if [ ! -f ./${CDK_DIR}/cdk.out/tree.json ]; then touch ${CDK_DIR}/cdk.out/tree.json; fi
 
 test-infra:
 	${COMPOSE_RUN} make _test-infra
 
 _test-infra:
-	npm test --prefix infrastructure/ 
+	npm test --prefix ${CDK_DIR}/ 
 
 down:
 	docker-compose down --remove-orphans --volume
@@ -232,7 +286,7 @@ check-infra-synthed:
 	${COMPOSE_RUN} make _check-infra-synthed
 
 _check-infra-synthed:
-	if [ ! -f ./infrastructure/template.yaml ]; then make synth; fi
+	if [ ! -f ./${CDK_DIR}/template.yaml ]; then make synth; fi
 
 synth: _prep-cache is-built
 	${COMPOSE_RUN} make _synth
