@@ -1,5 +1,6 @@
 # GSD-AWS-CDK-Serverless-Example
 [![CI](https://github.com/chrishart0/gsd-aws-cdk-serverless-example/actions/workflows/CI.yml/badge.svg)](https://github.com/chrishart0/gsd-aws-cdk-serverless-example/actions/workflows/CI.yml)
+[![CodeQL](https://github.com/chrishart0/gsd-aws-cdk-serverless-example/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/chrishart0/gsd-aws-cdk-serverless-example/actions/workflows/codeql-analysis.yml)
 
 Live Demo: [awsdemo.chrishart.cloud](https://awsdemo.chrishart.cloud/)
 
