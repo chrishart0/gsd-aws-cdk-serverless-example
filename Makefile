@@ -7,7 +7,7 @@ COMPOSE_UP_FRONTEND = docker-compose up frontend
 COMPOSE_UP_BACKEND = docker-compose up dynamodb sam
 COMPOSE_RUN_PLAYWRIGHT = docker-compose run --rm playwright
 COMPOSE_UP = docker-compose up base
-PROFILE = --profile personal
+PROFILE = --profile default
 REGION = --region us-east-1
 
 .DEFAULT_GOAL := help
@@ -202,6 +202,9 @@ _run-backend _start-api: _kill-sam
 ### Infra ###
 #############
 
+.PHONY: install-infra
+install-infra npm-install-infra: 
+	${COMPOSE_RUN} make _install-infra
 
 _install-infra:
 	npm install --prefix ${CDK_DIR}/

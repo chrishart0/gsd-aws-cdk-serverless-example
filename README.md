@@ -68,7 +68,6 @@ Get a overview of what will be deployed
 
 ### `make deploy`
 
-
 # More Details
 ## Working with the frontend
 
@@ -151,35 +150,22 @@ Devs don't do local testing (because it's too hard or takes too much time).
 # TODO
 A non-exhaustive list of items left to be addressed.
 
-* ~~Fix XDG/Open issue on `make run` in WSL~~
-* ~~Graceful exit of `make run`~~
-* Add error handling for the case of dummy values being left in `configs.env` when running `make synth`
-* CDK
-  * ~~Add check to run `make build` prior to `make synth` or `make diff` or `make deploy` only if build files not detected~~
-  * ~~CDK better env var handling. Need valid way to maintain on local without risk of commiting and entering in vars through CI/CD (Reference here make: https://github.com/contino/gsd-hello-world)~~
-* ~~Always run a `make build` before `make deploy`~~
-* ~~Add `make synth` and cdk testing to github actions~~
-* Testing
-  * ~~Make CDK tests pass and add to make `cdk test` file~~
-  * ~~Right now `make test` only runs frontend jest tests, `make test` should run all tests (currently only frontend jest tests and infra CDK tests)~~
-    * ~~There will be commands: `make test` `make infra-test` `make frontend-test`~~
-  * ~~Add end to end testing with playwright~~
-    * ~~Ensure it runs in CI~~
-* For _launch-browser command instead of wait 10 seconds, wait for site to be loaded
-* Add xray integration
-* Make a CloudWatch dashboard
-* Figure out a way to automatically include AWS config file 
-
-* Quality Scan: Add <https://www.sonarqube.org/downloads/> community edition to CI/CD. Use [this](https://github.com/contino/gsd-hello-world/blob/main/.github/workflows/quality.yml) as reference
-
 * CI/CD
+  * Quality Scan: Add <https://www.sonarqube.org/downloads/> community edition to CI/CD. Use [this](https://github.com/contino/gsd-hello-world/blob/main/.github/workflows/quality.yml) as reference
+  * 80% unit test coverage
+    * Frontend
+    * Backend
   * Add env handling to Github Actions
   * Get deploys working in GitHub actions
   * Split e2e testing into own run to speedup CI/CD
   * Add npm caching to speed up CI/CD
-  * Investiagte prebuilding containers for faster CI/CD
+  * Investigate pre-building containers for faster CI/CD
+  * Figure out a way to automatically include AWS config file 
 
 * Lambda API
-  * ~~Setup basic lambda function in CDK infra~~
   * Add unit tests to lambda function
-  * ~~Add local DynamoDB Container~~
+
+* Monitoring
+  * Make a CloudWatch dashboard
+  * Add xray integration
+  * Dep handling in CDK
