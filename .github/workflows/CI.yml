@@ -7,8 +7,6 @@ on:
       - master
       - bugfix/*
       - feature/*
-  schedule:
-    - cron: '17 21 * * 6'
 
     # Publish `v1.2.3` tags as releases.
     tags:
