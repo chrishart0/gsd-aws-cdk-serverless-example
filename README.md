@@ -12,8 +12,22 @@ The best part? Initial setup only takes a few minutes, most of which is waiting 
 This repo uses a pattern called [Three Musketeers](https://www.drewkhoury.com/post/gsd/3-musketeers-for-an-epic-developer-experience-8676ddaf33b2/), which provides for ease of setup and a better developer experience for this complicated local testing environment, with the added benefit of using the same local commands for the CI/CD.
 
 # First Time Use
-## Setup
+
+
+**NOTE: None of this will work if you don't have an aws configuration file. (Which you won't if you've never made an aws config file on your machine)**
+## How to create an AWS configuration file 
+1. Log in to your AWS account and enter IAM.
+2. In IAM, find your user, and click on the Security Credentials tab 
+3. Under access Keys, create a new access key (!Make sure to securely store your credentials!)
+4. Within your terminal install awscli (on MacOS, I utilized brew. So the command was brew install awscli)
+5. Once awscli is installed, type the command "aws configure". It'll prompt you for the access credentials you just made. Optionally, you can enter the region as well. (I use us-east-1)
+6. You now should have an aws configuration file on your machine 
+
+
+# Setup
 Ensure you have `docker`, `docker-compose`, and `make` installed. 
+
+
 
 ## Configuration 
 *You can skip this step if you want to test locally and wait until you are ready to deploy to do the configs.*
@@ -154,6 +168,7 @@ A non-exhaustive list of items left to be addressed.
 * For _launch-browser command instead of wait 10 seconds, wait for site to be loaded
 * Add xray integration
 * Make a CloudWatch dashboard
+* Figure out a way to automatically include AWS config file 
 
 * Quality Scan: Add <https://www.sonarqube.org/downloads/> community edition to CI/CD. Use [this](https://github.com/contino/gsd-hello-world/blob/main/.github/workflows/quality.yml) as reference
 
