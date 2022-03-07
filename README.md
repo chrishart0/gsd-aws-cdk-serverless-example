@@ -35,15 +35,25 @@ REACT_APP_USER_API_URL_LOCAL_SAM=http://localhost:3001/users
 
 `make run` - This will start the react frontend, Lambda Backend, and DynamoDB
 
+*Insert run and install gifs*
+
 ## Test it locally
 
 `make test` - This will run a suite of test
 
 `make test-frontend-interactive` - Starts up the jest test running in interactive mode, running `npm test` inside the container
+*Insert testing gif*
 
 `make test-e2e` - This will use playwright to run the end-to-end tests found in [e2e](./e2e/test.spec.ts)
 
 **Tip:** Make sure to use `ctrl+c` when stopping any of the running commands so the containers exit gracefully
+
+## Deploy
+### `make diff`
+Get a overview of what will be deployed
+
+### `make deploy`
+
 
 # More Details
 ## Working with the frontend
@@ -64,10 +74,11 @@ $exit
 ```
 
 ## Testing
-There are three kinds of tests included in this repo:
+There are severl kinds of tests included in this repo:
 * [End-to-end](infrastructure/test/infrastructure.test.ts)
 * [Frontend Unit Tests](frontend/src/App.test.js)
 * [AWS CDK Infrastructure Unit Tests:](infrastructure/test/infrastructure.test.ts) find docs [here](https://docs.aws.amazon.com/cdk/v2/guide/testing.html)
+* [Backend Unit Tests](backend/tests/unit/test_handler.py)
 
 `make test` - Run all tests: currently frontend unit and e2e
 
@@ -96,6 +107,16 @@ There are three kinds of tests included in this repo:
 * Run `make deploy`
 
 Note: Each time you run `make deploy` the frontend will be rebuilt and redeployed. If you know no changes to the frontend were made then run `make deploy-no-build`
+
+## Monitoring
+
+### `make monitor-lambda-logs`
+This command will parse through the template created by `make synth` and monitor, in near real time, the logs of the backendFunction. This currently only works for functions deployed with `make deploy`. To monitor other functions reference the docs [here](https://github.com/awsdocs/aws-sam-developer-guide/blob/master/doc_source/serverless-sam-cli-logging.md) and use `make cli` to execute other commands.
+
+*Insert monitoring gif*
+
+## Detailed description of how local testing works
+*ToDo*
 
 # Goals
 It's hard to maintain and locally test serverless envs.

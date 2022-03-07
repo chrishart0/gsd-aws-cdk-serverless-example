@@ -7,7 +7,7 @@ COPY backend/tests/requirements.txt /tmp
 
 #Install CDK and Frontend
 RUN apt-get update && apt-get install -y \
-    make \
+    make jq\
     software-properties-common \
     && npm install -g aws-cdk ts-node
 
@@ -16,7 +16,7 @@ RUN apt-get install -y \
     python3.9 \
     python3.8-venv python3.9-venv \
     && pip install pip \
-    && pip install awscli aws-sam-cli==1.12.0 \
+    && pip install awscli aws-sam-cli==1.12.0 markupsafe==2.0.1 \
     && pip install -r /tmp/requirements.txt \
     && rm -rf /var/lib/apt/lists/*
 

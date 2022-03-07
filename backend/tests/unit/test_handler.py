@@ -1,9 +1,10 @@
 import json
+import os
 
 import pytest
+from moto import mock_dynamodb2
 
 from hello_world import app
-
 
 @pytest.fixture()
 def apigw_event():
@@ -61,8 +62,15 @@ def apigw_event():
         "path": "/examplepath",
     }
 
+# @pytest.fixture
+# def mock_envs(monkeypatch):
+#     monkeypatch.setenv("LOG_LEVEL", "INFO")
 
-def test_lambda_handler(apigw_event, mocker):
+def test_log_level_env():
+    assert os.environ["LOG_LEVEL"] == "INFO"
+
+@mock_dynamodb2
+def test_lambda_handler(apigw_event):
 
     ret = app.lambda_handler(apigw_event, "")
     data = json.loads(ret["body"])
@@ -70,4 +78,3 @@ def test_lambda_handler(apigw_event, mocker):
     assert ret["statusCode"] == 200
     assert "message" in ret["body"]
     assert data["message"] == "User count: 1"
-    # assert "location" in data.dict_keys()

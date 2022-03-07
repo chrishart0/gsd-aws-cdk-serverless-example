@@ -7,7 +7,8 @@ COMPOSE_UP_FRONTEND = docker-compose up frontend
 COMPOSE_UP_BACKEND = docker-compose up dynamodb sam
 COMPOSE_RUN_PLAYWRIGHT = docker-compose run --rm playwright
 COMPOSE_UP = docker-compose up base
-PROFILE = --profile default
+PROFILE = --profile personal
+REGION = --region us-east-1
 
 .DEFAULT_GOAL := help
 
@@ -55,7 +56,7 @@ install npm-install: _prep-env build-container install-infra install-frontend in
 test: test-frontend test-e2e test-infra
 
 .PHONY: run
-run: _prep-env _launch-browser
+run: _prep-env _launch-browser check-infra-synthed
 	${COMPOSE_UP_FULL_STACK}
 
 ################
@@ -163,7 +164,16 @@ test-backend-unit:
 	${COMPOSE_RUN} make _test-backend-unit
 
 _test-backend-unit:
-	cd backend && python -m pytest tests/unit -v && cd ..
+	cd backend && LOG_LEVEL=INFO AWSENV=AWS_SAM_LOCAL python -m pytest tests/unit -v && cd ..
+
+# Monitor lambda function logs which was deployed from local
+# ToDo: Monitor other lambda functions
+.PHONY: monitor-lambda-logs
+monitor-lambda-logs:
+	${COMPOSE_RUN} make _monitor-lambda-logs
+_monitor-lambda-logs:
+	echo "============ Monitoring $$(grep -B1 'AWS::Lambda::Function' infrastructure/template.yaml | grep -o BackendFunction[0-9]*) greated via stack $$(grep 'displayName' infrastructure/cdk.out/manifest.json| cut -d: -f2 |  tr -d '\"') ============"
+	sam logs -n $$(grep -B1 'AWS::Lambda::Function' infrastructure/template.yaml | grep -o BackendFunction[0-9]*) --stack-name $$(grep 'displayName' infrastructure/cdk.out/manifest.json| cut -d: -f2 |  tr -d '"') --tail ${PROFILE} ${REGION}
 
 build-backend: synth
 
@@ -176,74 +186,7 @@ run-backend: check-infra-synthed
 	${COMPOSE_UP_BACKEND}
 
 _run-backend _start-api: _kill-sam
-	cd backend && sam local start-api -p 3001 -t ../#############
-### Infra ###
-#############
-
-.PHONY: install-infra
-install-infra npm-install-infra: 
-	${COMPOSE_RUN} make _install-infra
-
-_install-infra:
-	npm install --prefix ${CDK_DIR}/
-
-_prep-cache: #This resolves Error: EACCES: permission denied, open 'cdk.out/tree.json'
-	mkdir -p ${CDK_DIR}/cdk.out/
-	if [ ! -f ./${CDK_DIR}/cdk.out/tree.json ]; then touch ${CDK_DIR}/cdk.out/tree.json; fi
-
-test-infra:
-	${COMPOSE_RUN} make _test-infra
-
-_test-infra:
-	npm test --prefix ${CDK_DIR}/ 
-
-down:
-	docker-compose down --remove-orphans --volume
-
-clear-cache:
-	${COMPOSE_RUN} rm -rf ${CDK_DIR}cdk.out && rm -rf ${CDK_DIR}node_modules
-
-check-infra-synthed: 
-	${COMPOSE_RUN} make _check-infra-synthed
-
-_check-infra-synthed:
-	if [ ! -f ./${CDK_DIR}/template.yaml ]; then make synth; fi
-
-synth: _prep-cache is-built
-	${COMPOSE_RUN} make _synth
-
-_synth:
-	cd ${CDK_DIR} && cdk synth --no-staging ${PROFILE} > template.yaml
-
-bootstrap: _prep-cache
-	${COMPOSE_RUN} make _bootstrap
-
-_bootstrap:
-	cd ${CDK_DIR} && cdk bootstrap ${PROFILE}
-
-deploy: _prep-cache build
-	${COMPOSE_RUN} make _deploy 
-
-deploy-no-build: _prep-cache
-	${COMPOSE_RUN} make _deploy 
-
-_deploy: 
-	cd ${CDK_DIR} && cdk deploy --require-approval never ${PROFILE}
-
-destroy:
-	${COMPOSE_RUN} make _destroy
-
-_destroy:
-	cd ${CDK_DIR} && cdk destroy --force ${PROFILE}
-
-diff: _prep-cache is-built
-	${COMPOSE_RUN} make _diff
-
-_diff: _prep-cache
-	cd ${CDK_DIR} && cdk diff ${PROFILE}/template.yaml --docker-volume-basedir /home/chris/git/gsd-aws-cdk-serverless-example/backend --host 0.0.0.0 --env-vars sam_local_environment_variables.json --docker-network aws_backend && cd ..
-
-# cd backend && sam local start-api -p 3001 -t ../infrastructure/template.yaml --docker-volume-basedir /home/chris/git/gsd-aws-cdk-serverless-example/backend  --container-host host.docker.internal --host 0.0.0.0 --warm-containers EAGER --debug && cd ..
-
+	cd backend && sam local start-api -p 3001 -t ../infrastructure/template.yaml --docker-volume-basedir /home/chris/git/gsd-aws-cdk-serverless-example/backend --host 0.0.0.0 --env-vars sam_local_environment_variables.json --docker-network aws_backend && cd ..
 
 # sam local start-api \
 #     --host 0.0.0.0 \
@@ -259,9 +202,6 @@ _diff: _prep-cache
 ### Infra ###
 #############
 
-.PHONY: install-infra
-install-infra npm-install-infra: 
-	${COMPOSE_RUN} make _install-infra
 
 _install-infra:
 	npm install --prefix ${CDK_DIR}/
