@@ -7,9 +7,8 @@ on:
       - master
       - bugfix/*
       - feature/*
-  # Run on schedule to catch any new issues from deps which keep showing up
   schedule:
-    - cron: '17 21 * * 6' 
+    - cron: '17 21 * * 6'
 
     # Publish `v1.2.3` tags as releases.
     tags:
