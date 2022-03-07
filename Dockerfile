@@ -16,7 +16,7 @@ RUN apt-get install -y \
     python3.9 \
     python3.8-venv python3.9-venv \
     && pip install pip \
-    && pip install awscli aws-sam-cli==1.12.0 markupsafe==2.0.1 \
+    && pip install awscli aws-sam-cli==1.12.0 markupsafe==2.0.1 botocore==1.24.14 \
     && pip install -r /tmp/requirements.txt \
     && rm -rf /var/lib/apt/lists/*
 
