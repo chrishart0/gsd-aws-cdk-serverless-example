@@ -72,8 +72,9 @@ def apigw_event():
 def test_log_level_env():
     assert os.environ["LOG_LEVEL"] == "INFO"
 
-@mock_dynamodb2
-def test_lambda_handler(apigw_event):
+# @mock_dynamodb2
+# @pytest.fixture(scope='function')
+def test_lambda_handler(apigw_event, dynamodb_table):
 
     ret = app.lambda_handler(apigw_event, "")
     print("ret:",ret)

@@ -164,7 +164,7 @@ test-backend-unit:
 	${COMPOSE_RUN} make _test-backend-unit
 
 _test-backend-unit:
-	cd backend && LOG_LEVEL=INFO AWSENV=AWS_SAM_LOCAL python -m pytest tests/unit -v && cd ..
+	cd backend && LOG_LEVEL=INFO AWSENV=AWSENV TABLE_NAME=visitorCount CORS_URL=http://localhost:3000 python -m pytest tests/unit -v && cd ..
 
 # Monitor lambda function logs which was deployed from local
 # ToDo: Monitor other lambda functions
