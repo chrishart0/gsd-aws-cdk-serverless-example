@@ -6,6 +6,8 @@ from moto import mock_dynamodb2
 
 from hello_world import app
 
+
+
 @pytest.fixture()
 def apigw_event():
     """ Generates API GW Event"""
@@ -66,6 +68,7 @@ def apigw_event():
 # def mock_envs(monkeypatch):
 #     monkeypatch.setenv("LOG_LEVEL", "INFO")
 
+
 def test_log_level_env():
     assert os.environ["LOG_LEVEL"] == "INFO"
 
@@ -73,7 +76,9 @@ def test_log_level_env():
 def test_lambda_handler(apigw_event):
 
     ret = app.lambda_handler(apigw_event, "")
+    print("ret:",ret)
     data = json.loads(ret["body"])
+    print("data:",data)
 
     assert ret["statusCode"] == 200
     assert "message" in ret["body"]
