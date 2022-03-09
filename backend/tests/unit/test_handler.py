@@ -2,10 +2,8 @@ import json
 import os
 
 import pytest
+import boto3
 from moto import mock_dynamodb2
-
-from hello_world import app
-
 
 
 @pytest.fixture()
@@ -64,23 +62,40 @@ def apigw_event():
         "path": "/examplepath",
     }
 
-# @pytest.fixture
-# def mock_envs(monkeypatch):
-#     monkeypatch.setenv("LOG_LEVEL", "INFO")
-
-
 def test_log_level_env():
     assert os.environ["LOG_LEVEL"] == "INFO"
 
-# @mock_dynamodb2
-# @pytest.fixture(scope='function')
-def test_lambda_handler(apigw_event, dynamodb_table):
+@mock_dynamodb2
+def test_lambda_handler(apigw_event):
+
+    from hello_world import app
+    
+    dynamodb = boto3.resource('dynamodb')
+    dynamodb.create_table(
+        TableName='visitorCount',
+        KeySchema=[
+            {
+                'AttributeName': 'Count',
+                'KeyType': 'HASH'
+            }
+        ],
+        AttributeDefinitions=[
+            {
+                'AttributeName': 'Count',
+                'AttributeType': 'S'
+            }
+        ],
+        ProvisionedThroughput={
+            'ReadCapacityUnits': 1,
+            'WriteCapacityUnits': 1
+        }
+    )
 
     ret = app.lambda_handler(apigw_event, "")
     print("ret:",ret)
     data = json.loads(ret["body"])
     print("data:",data)
 
+
     assert ret["statusCode"] == 200
-    assert "message" in ret["body"]
-    assert data["message"] == "User count: 1"
+    assert data["User count"] == "1"
