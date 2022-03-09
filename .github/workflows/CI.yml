@@ -62,3 +62,6 @@ jobs:
 
     - name: Infra Unit Tests
       run: make test-infra
+
+    - name: Backend Unit Tests
+      run: make test-backend
