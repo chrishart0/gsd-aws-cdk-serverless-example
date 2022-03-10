@@ -4,3 +4,4 @@ infrastructure/lib
 nohup.out
 watch.log
 configs.env
+coverage-reports

@@ -1,5 +1,5 @@
 pytest
-pytest-mock
 pytest-timeout
 boto3
 moto
+pytest-cov
