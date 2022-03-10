@@ -65,3 +65,6 @@ jobs:
 
     - name: Backend Unit Tests
       run: make test-backend
+
+    - name: SonarCloud Scan
+      uses: sonarsource/sonarcloud-github-action@v1.6
