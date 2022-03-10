@@ -70,7 +70,7 @@ def test_lambda_handler(apigw_event):
 
     from hello_world import app
     
-    dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+    dynamodb = boto3.resource('dynamodb')
     dynamodb.create_table(
         TableName='visitorCount',
         KeySchema=[
