@@ -37,6 +37,10 @@ Ensure you have `docker`, `docker-compose`, and `make` installed.
 *You can skip this step if you want to test locally and wait until you are ready to deploy to do the configs.*
 
 In the root of this repo make a file called `configs.env` and fill it out as show below but replacing the example values.
+
+First 3 found under route 53 in AWS. 
+
+-----------Unsure about REACT_APP_USER_API_DOMAIN ---------------
 ```
 domain=site.EXAMPLE.com
 hostedZoneName=EXAMPLE.com
