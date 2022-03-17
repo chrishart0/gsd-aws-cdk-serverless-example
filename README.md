@@ -38,7 +38,7 @@ Ensure you have `docker`, `docker-compose`, and `make` installed.
 
 In the root of this repo make a file called `configs.env` and fill it out as show below but replacing the example values.
 
-First 3 found under route 53 in AWS. 
+The first three can all be found under Route 53 Hosted Zones details in AWS console. 
 
 -----------Unsure about REACT_APP_USER_API_DOMAIN ---------------
 ```
