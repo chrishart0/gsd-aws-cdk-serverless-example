@@ -1,5 +1,8 @@
+#You must rebuild the docker container with make build-container to install python deps
 pytest
 pytest-timeout
 boto3
 moto
 pytest-cov
+pylint
+coveralls
