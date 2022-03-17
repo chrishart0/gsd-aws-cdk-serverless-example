@@ -30,7 +30,8 @@ Ensure you have `docker`, `docker-compose`, and `make` installed.
   AWS CLI : https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
   
   Docker: https://www.docker.com/
-
+  
+  Make for powershell: 1. Install chocolatey : https://chocolatey.org/install 2. Run "choco install make"
 
 
 ## Configuration 
