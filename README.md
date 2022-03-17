@@ -28,7 +28,7 @@ This repo uses a pattern called [Three Musketeers](https://www.drewkhoury.com/po
 Ensure you have `docker`, `docker-compose`, and `make` installed. 
  
   AWS CLI : https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
-  
+  Docker: https://www.docker.com/
 
 
 
