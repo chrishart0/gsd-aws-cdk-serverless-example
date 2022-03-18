@@ -17,13 +17,12 @@
   },
 
   "jest": {
-    "collectCoverage": true,
     "coverageReporters": ["json"]
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --coverage",
+    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
