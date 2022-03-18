@@ -65,7 +65,15 @@ jobs:
 
     - name: Backend Unit Tests
       run: make test-backend
-      
+
+    - uses: codecov/codecov-action@v2
+      with:
+        # token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+        files: backend/coverage.xml
+        flags: unittests # optional
+        # name: codecov-umbrella # optional
+        fail_ci_if_error: true # optional (default = false)
+
     # - name: SonarCloud Scan
     #   uses: sonarsource/sonarcloud-github-action@v1.6
     #   env:
