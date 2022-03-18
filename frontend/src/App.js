@@ -10,7 +10,6 @@ function App() {
 
   //Special handling to use localhost SAM API if running locally via npm start(make run)
   const apiUrl = (process.env.NODE_ENV !== 'development') ? 'https://' + process.env.REACT_APP_USER_API_DOMAIN + '/users' : process.env.REACT_APP_USER_API_URL_LOCAL_SAM
-  console.log('apiUrl: ', apiUrl)
 
   //Prevent continuous reloading calling API each time
   useEffect(() => {
