@@ -21,3 +21,10 @@ test('Visitor Counter Visible', () => {
   const subHeading = screen.getByText(/Visitor Count/i);
   expect(subHeading).toBeInTheDocument();
 });
+
+test('GitHub Link', () => {
+  render(<App />);
+
+  const gitHubLink = screen.getByText(/Edit on Github!/i);
+  expect(gitHubLink).toBeInTheDocument();
+});

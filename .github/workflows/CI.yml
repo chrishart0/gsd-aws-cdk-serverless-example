@@ -50,25 +50,24 @@ jobs:
         make install
 
     - name: Frontend Unit Tests
+      id: frontend_unit_tests
       run: make test-frontend
       
+    - name: Backend Unit Tests
+      if: success() && steps.frontend_unit_tests.outcome == 'failure' #Run backend unit tests even if frontend tests fail
+      run: make test-backend
+
     #Need to get tests hitting API to work
     # - name: Local e2e test
     #   run: | 
     #     make run > /dev/null 2>&1 & 
     #     make test-e2e-ci
-
-    - name: Build
-      run: make ci
     
     - name: Infra Synth
       run: make synth
 
     - name: Infra Unit Tests
       run: make test-infra
-
-    - name: Backend Unit Tests
-      run: make test-backend
 
     - uses: codecov/codecov-action@v2
       if: always()
@@ -78,6 +77,9 @@ jobs:
         flags: unittests # optional
         # name: codecov-umbrella # optional
         fail_ci_if_error: true # optional (default = false)
+
+    - name: Build
+      run: make ci
 
     # - name: SonarCloud Scan
     #   uses: sonarsource/sonarcloud-github-action@v1.6

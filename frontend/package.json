@@ -20,16 +20,18 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "coverage": "react-scripts test --coverage",
+    "coverage": "react-scripts test --coverage --watchAll=false ",
     "eject": "react-scripts eject"
   },
   "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!<rootDir>/node_modules/"
+    ],
     "coverageThreshold": {
       "global": {
-        "branches": 80,
-        "functions": 80,
         "lines": 80,
-        "statements": 80
+        "statements": 70
       }
     }
   },

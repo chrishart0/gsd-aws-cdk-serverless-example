@@ -24,8 +24,6 @@ function App() {
       console.log(err);
     });
   }, [] );
-  
-  console.log('userCount:', userCount)
 
   return (
     <div className="App">
