@@ -74,7 +74,7 @@ jobs:
       if: always()
       with:
         # token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-        files: backend/coverage.xml
+        files: ./backend/coverage.xml,./frontend/coverage/clover.xml
         flags: unittests # optional
         # name: codecov-umbrella # optional
         fail_ci_if_error: true # optional (default = false)

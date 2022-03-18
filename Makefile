@@ -101,7 +101,7 @@ test-frontend:
 	${COMPOSE_RUN} make _test-frontend
 
 _test-frontend:
-	export CI=true && npm test --prefix frontend/
+	export CI=true && npm run coverage --prefix frontend/ 
 
 .PHONY: test-frontend-interactive
 test-frontend-interactive: 
