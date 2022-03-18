@@ -54,7 +54,8 @@ jobs:
       run: make test-frontend
       
     - name: Backend Unit Tests
-      if: success() && steps.frontend_unit_tests.outcome == 'failure' #Run backend unit tests even if frontend tests fail
+      id: backend_unit_tests
+      if: success() || steps.frontend_unit_tests.outcome == 'failure' #Run backend unit tests even if frontend tests fail
       run: make test-backend
 
     #Need to get tests hitting API to work
@@ -70,7 +71,7 @@ jobs:
       run: make test-infra
 
     - uses: codecov/codecov-action@v2
-      if: always()
+      if: steps.frontend_unit_tests.outcome == 'failure' || steps.backend_unit_tests.outcome == 'failure'
       with:
         # token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
         files: ./backend/coverage.xml,./frontend/coverage/clover.xml
