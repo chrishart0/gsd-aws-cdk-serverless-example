@@ -71,7 +71,7 @@ jobs:
       run: make test-infra
 
     - uses: codecov/codecov-action@v2
-      if: steps.frontend_unit_tests.outcome == 'failure' || steps.backend_unit_tests.outcome == 'failure'
+      if: always()
       with:
         # token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
         files: ./backend/coverage.xml,./frontend/coverage/clover.xml
