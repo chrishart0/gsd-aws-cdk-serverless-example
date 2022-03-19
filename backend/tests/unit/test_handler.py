@@ -1,6 +1,7 @@
 import json
 import os
-
+# from botocore.exceptions import UnrecognizedClientException
+from botocore.exceptions import ClientError
 import pytest
 import boto3
 from moto import mock_dynamodb2
@@ -66,7 +67,7 @@ def test_log_level_env():
     assert os.environ["LOG_LEVEL"] == "INFO"
 
 @mock_dynamodb2
-def test_lambda_handler(apigw_event):
+def test_first_user_give_1_user(apigw_event):
 
     from hello_world import app
     
@@ -99,3 +100,52 @@ def test_lambda_handler(apigw_event):
 
     assert ret["statusCode"] == 200
     assert data["User count"] == "1"
+
+@mock_dynamodb2
+def test_second_user_give_2_users(apigw_event):
+
+    from hello_world import app
+    
+    dynamodb = boto3.resource('dynamodb')
+    dynamodb.create_table(
+        TableName='visitorCount',
+        KeySchema=[
+            {
+                'AttributeName': 'Count',
+                'KeyType': 'HASH'
+            }
+        ],
+        AttributeDefinitions=[
+            {
+                'AttributeName': 'Count',
+                'AttributeType': 'S'
+            }
+        ],
+        ProvisionedThroughput={
+            'ReadCapacityUnits': 1,
+            'WriteCapacityUnits': 1
+        }
+    )
+
+    app.lambda_handler(apigw_event, "")
+    ret = app.lambda_handler(apigw_event, "")
+    print("ret:",ret)
+    data = json.loads(ret["body"])
+    print("data:",data)
+
+
+    assert ret["statusCode"] == 200
+    assert data["User count"] == "2"
+
+# def test_bad_ddb(apigw_event):
+
+#     from hello_world import app
+
+#     dynamodb = boto3.resource('dynamodb')
+#     client = boto3.client('logs')
+
+#     with pytest.raises(ClientError):
+#         ret = app.lambda_handler(apigw_event, "")
+#         print("ret:",ret)
+#         data = json.loads(ret["body"])
+#         print("data:",data)

@@ -69,9 +69,11 @@ def updateUserCount(count):
 
 def lambda_handler(event, context):
 
+    logger.info("Lambda handler invocation initiated")
     user_count = getUserCount()
     updateUserCount(user_count)
 
+    
     return {
         "statusCode": 200,
         'headers': {
