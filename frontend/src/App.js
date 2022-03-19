@@ -11,8 +11,7 @@ function App() {
   //Special handling to use localhost SAM API if running locally via npm start(make run)
   const apiUrl = (process.env.NODE_ENV !== 'development') ? 'https://' + process.env.REACT_APP_USER_API_DOMAIN + '/users' : process.env.REACT_APP_USER_API_URL_LOCAL_SAM
 
-  //Prevent continuous reloading calling API each time
-  useEffect(() => {
+  async function fetchUserCount() {
     fetch(apiUrl)
     .then(response => response.json())
     .then(response => {
@@ -22,6 +21,11 @@ function App() {
     .catch(err => {
       console.log(err);
     });
+  }
+
+  //Prevent continuous reloading calling API each time
+  useEffect(() => {
+    fetchUserCount();
   }, [] );
 
   return (
