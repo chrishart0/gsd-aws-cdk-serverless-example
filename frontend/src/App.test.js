@@ -13,8 +13,15 @@ it('renders static page as expected', async () => {
 
   const gitHubLink = screen.getByText(/Edit on Github!/i);
   expect(gitHubLink).toBeInTheDocument();
+
+  
 });
 
+it('renders the navbar as expected', async () => {
+  render(<Navbar />)
+  const NavBar = screen.getByText(/LOGO/i);
+  expect(NavBar).toBeInTheDocument();
+});
 
 it('fetches user count successfully', async () => {
   const userCount = { "User count": "2" }

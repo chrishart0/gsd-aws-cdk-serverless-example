@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
+import Navbar from 'components/navBar';
 import './App.css'; 
 
 import githubLogo from 'images/githubLogo.png'
@@ -30,6 +31,7 @@ function App() {
 
   return (
     <div className="App">
+      <Navbar className ="AppBar"/>
       <header className="App-header">
         <Container className='header' maxWidth='md'>
           <Typography variant='h2'>
