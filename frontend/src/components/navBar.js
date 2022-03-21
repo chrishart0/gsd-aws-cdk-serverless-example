@@ -12,7 +12,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 
-const pages = ['Shop', 'About Us', 'Blog'];
+const pages = ['About Us', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const ResponsiveAppBar = () => {
@@ -35,7 +35,7 @@ const ResponsiveAppBar = () => {
   };
 
   return (
-    <AppBar className='AppBar' position="static">
+    <AppBar className='AppBar' id="AppBar" position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
@@ -106,7 +106,7 @@ const ResponsiveAppBar = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Memy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="User Profile Pic" src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
             <Menu
