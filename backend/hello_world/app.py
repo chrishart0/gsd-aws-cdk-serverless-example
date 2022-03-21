@@ -87,6 +87,7 @@ def lambda_handler(event, context):
     updateUserCount(user_count)
 
     if not (user_count):
+        logger.error('Something went wrong, returning 500')
         return {
         "statusCode": 500,
         'headers': {
@@ -97,6 +98,7 @@ def lambda_handler(event, context):
         }
     }
 
+    logger.error('Function completed successfully, returning 200')
     return {
         "statusCode": 200,
         'headers': {
