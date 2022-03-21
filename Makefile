@@ -53,7 +53,7 @@ cli: _prep-cache
 install npm-install: _prep-env build-container install-infra install-frontend install-e2e install-backend synth
 
 .PHONY: test
-test: test-frontend test-e2e test-infra
+test: test-frontend test-backend test-e2e test-infra
 
 .PHONY: run
 run: _prep-env _launch-browser check-infra-synthed
@@ -164,7 +164,7 @@ test-backend-unit:
 	${COMPOSE_RUN} make _test-backend-unit
 
 _test-backend-unit:
-	cd backend && LOG_LEVEL=INFO AWSENV=AWSENV TABLE_NAME=visitorCount CORS_URL=http://localhost:3000 AWS_DEFAULT_REGION=us-east-1 python -m pytest tests/unit -v --cov=hello_world --cov-report xml --cov-fail-under 75 && cd ..
+	cd backend && LOG_LEVEL=INFO AWSENV=AWSENV TABLE_NAME=visitorCount CORS_URL=http://localhost:3000 AWS_DEFAULT_REGION=us-east-1 python -m pytest tests/unit -v --cov=hello_world --cov-report xml --cov-fail-under 80 && cd ..
 
 # Monitor lambda function logs which was deployed from local
 # ToDo: Monitor other lambda functions
