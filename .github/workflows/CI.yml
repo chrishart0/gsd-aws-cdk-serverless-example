@@ -95,6 +95,8 @@ jobs:
 
     - name: Build
       run: make ci
+      env:
+        THREE_M_DOMAIN: ${{ secrets.THREE_M_DOMAIN }}
 
     - name: Infra Diff
       run: make diff
@@ -110,7 +112,7 @@ jobs:
     - name: Deploy
       run: make deploy
 
-    # - name: SonarCloud Scan
-    #   uses: sonarsource/sonarcloud-github-action@v1.6
-    #   env:
-    #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    - name: SonarCloud Scan
+      uses: sonarsource/sonarcloud-github-action@v1.6
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
