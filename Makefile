@@ -51,13 +51,13 @@ cli: _prep-cache
 
 # These commands run processes acorss the mulitple layers of the project
 .PHONY: install
-install npm-install: _prep-env build-container install-infra install-frontend install-e2e install-backend
+install: _prep-env build-container install-infra install-frontend install-e2e install-backend ## create config file, build container images. For apps: build node/python modules
 
 .PHONY: test
-test: test-frontend test-backend test-e2e test-infra
+test: test-frontend test-backend test-e2e test-infra ## test the app - you can test specific parts with test-x (options are frontend, frontend-interactive, backend, e2e, infra)
 
 .PHONY: run
-run: _prep-env _launch-browser check-infra-synthed
+run: _prep-env _launch-browser check-infra-synthed ## run the application locally (must manually run `make install` at least once)
 	${COMPOSE_UP_FULL_STACK}
 
 ################
@@ -259,7 +259,7 @@ destroy:
 _destroy:
 	cd ${CDK_DIR} && cdk destroy --force ${PROFILE}
 
-diff: _prep-cache is-built
+diff: _prep-cache is-built ## an overview of what infra will be deployed (cdk diff)
 	${COMPOSE_RUN} make _diff
 
 _diff: _prep-cache
