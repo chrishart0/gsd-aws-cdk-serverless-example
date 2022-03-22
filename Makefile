@@ -26,9 +26,9 @@ _prep-env:
 		echo "No configs.env file found, genereating from env variables"; \
 		touch configs.env; \
 		echo "REACT_APP_USER_API_URL_LOCAL_SAM=http://localhost:3001/users" >> configs.env; \
-		echo "THREE_M_DOMAIN=${THREE_M_DOMAIN}" >> configs.env; \
-		echo "THREE_M_HOSTED_ZONE_NAME=${THREE_M_HOSTED_ZONE_NAME}" >> configs.env; \
-		echo "THREE_M_HOSTED_ZONE_ID=${THREE_M_HOSTED_ZONE_ID}" >> configs.env; \
+		echo "THREE_M_DOMAIN=${THREE_M_DOMAIN} #Domain or Subdomain to use" >> configs.env; \
+		echo "THREE_M_HOSTED_ZONE_NAME=${THREE_M_HOSTED_ZONE_NAME} #AWS Route53 Hosted Zone Name" >> configs.env; \
+		echo "THREE_M_HOSTED_ZONE_ID=${THREE_M_HOSTED_ZONE_ID} #AWS Route53 Hosted Zone ID https://arcadian.cloud/aws/2022/03/22/how-to-find-hosted-zone-id-in-route53-aws-in-3-clicks/" >> configs.env; \
 	fi
 
 _prep-env-ci:
