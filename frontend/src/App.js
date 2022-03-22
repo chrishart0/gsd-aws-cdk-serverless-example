@@ -10,7 +10,7 @@ function App() {
   const [userCount, setUserCount] = useState(false);
 
   //Special handling to use localhost SAM API if running locally via npm start(make run)
-  const apiUrl = (process.env.NODE_ENV !== 'development') ? 'https://' + process.env.REACT_APP_USER_API_DOMAIN + '/users' : process.env.REACT_APP_USER_API_URL_LOCAL_SAM
+  const apiUrl = (process.env.NODE_ENV !== 'development') ? 'https://api.' + process.env.THREE_M_DOMAIN + '/users' : process.env.REACT_APP_USER_API_URL_LOCAL_SAM
 
   async function fetchUserCount() {
     fetch(apiUrl)

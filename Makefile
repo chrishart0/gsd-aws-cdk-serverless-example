@@ -29,14 +29,12 @@ _prep-env:
 		echo "THREE_M_DOMAIN=${THREE_M_DOMAIN}" >> configs.env; \
 		echo "THREE_M_HOSTED_ZONE_NAME=${THREE_M_HOSTED_ZONE_NAME}" >> configs.env; \
 		echo "THREE_M_HOSTED_ZONE_ID=${THREE_M_HOSTED_ZONE_ID}" >> configs.env; \
-		echo "REACT_APP_USER_API_DOMAIN=${REACT_APP_USER_API_DOMAIN}" >> configs.env; \
 	fi
 
 _prep-env-ci:
 	echo "THREE_M_DOMAIN=${THREE_M_DOMAIN}" >> configs.env; \
 	echo "THREE_M_HOSTED_ZONE_NAME=${THREE_M_HOSTED_ZONE_NAME}" >> configs.env; \
 	echo "THREE_M_HOSTED_ZONE_ID=${THREE_M_HOSTED_ZONE_ID}" >> configs.env; \
-	echo "REACT_APP_USER_API_DOMAIN=${REACT_APP_USER_API_DOMAIN}" >> configs.env; \
 
 build-container: 
 	docker-compose build

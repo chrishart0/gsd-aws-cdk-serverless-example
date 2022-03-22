@@ -35,10 +35,9 @@ Ensure you have `docker`, `docker-compose`, and `make` installed.
 
 In the root of this repo make a file called `configs.env` and fill it out as show below but replacing the example values.
 ```
-domain=site.EXAMPLE.com
-hostedZoneName=EXAMPLE.com
-hostedZoneId=123ASDFGH456AQWER34T4V1C
-REACT_APP_USER_API_DOMAIN=api.site.EXAMPLE.com
+THREE_M_DOMAIN=site.EXAMPLE.com
+THREE_M_HOSTED_ZONE_NAME=EXAMPLE.com
+THREE_M_HOSTED_ZONE_ID=123ASDFGH456AQWER34T4V1C
 REACT_APP_USER_API_URL_LOCAL_SAM=http://localhost:3001/users
 ```
 

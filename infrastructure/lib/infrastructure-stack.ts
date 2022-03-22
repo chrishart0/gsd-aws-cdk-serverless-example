@@ -21,7 +21,7 @@ export class InfrastructureStack extends Stack {
     const hostedZoneId:string = process.env.THREE_M_HOSTED_ZONE_ID!
     const hostedZoneName:string = process.env.THREE_M_HOSTED_ZONE_NAME!
     const siteDomain:string = process.env.THREE_M_DOMAIN!
-    const apiDomain = process.env.REACT_APP_USER_API_DOMAIN!
+    const apiDomain = 'api.' + siteDomain
 
     const zone = route53.HostedZone.fromHostedZoneAttributes(this, 'zone', {
       zoneName: hostedZoneName,

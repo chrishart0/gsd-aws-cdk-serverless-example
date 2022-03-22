@@ -39,7 +39,6 @@ jobs:
     - name: Prep Configs
       run: | 
         make _prep-env-ci
-        cat configs.env
 
     - uses: satackey/action-docker-layer-caching@v0.0.11
       # Ignore the failure of a step and avoid terminating the job.
@@ -84,6 +83,11 @@ jobs:
 
     - name: Infra Diff
       run: make diff
+      env:
+        THREE_M_DOMAIN: ${{ secrets.THREE_M_DOMAIN }}
+        THREE_M_HOSTED_ZONE_NAME: ${{ secrets.THREE_M_HOSTED_ZONE_NAME }}
+        THREE_M_HOSTED_ZONE_ID: ${{ secrets.THREE_M_HOSTED_ZONE_ID }}
+        REACT_APP_USER_API_DOMAIN: ${{ secrets.REACT_APP_USER_API_DOMAIN }}
 
     - name: Deploy
       run: make deploy
