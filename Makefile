@@ -51,7 +51,7 @@ cli: _prep-cache
 
 # These commands run processes acorss the mulitple layers of the project
 .PHONY: install
-install npm-install: _prep-env build-container install-infra install-frontend install-e2e install-backend synth
+install npm-install: _prep-env build-container install-infra install-frontend install-e2e install-backend
 
 .PHONY: test
 test: test-frontend test-backend test-e2e test-infra
@@ -230,7 +230,7 @@ check-infra-synthed:
 	${COMPOSE_RUN} make _check-infra-synthed
 
 _check-infra-synthed:
-	if [ ! -f ./${CDK_DIR}/template.yaml ]; then make synth; fi
+	if [ ! -f ./${CDK_DIR}/template.yaml ]; then make _synth; fi
 
 synth: _prep-cache is-built
 	${COMPOSE_RUN} make _synth
