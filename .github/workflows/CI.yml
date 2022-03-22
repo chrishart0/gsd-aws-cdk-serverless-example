@@ -112,7 +112,7 @@ jobs:
     - name: Deploy
       run: make deploy
 
-    - name: SonarCloud Scan
-      uses: sonarsource/sonarcloud-github-action@v1.6
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    # - name: SonarCloud Scan
+    #   uses: sonarsource/sonarcloud-github-action@v1.6
+    #   env:
+    #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
