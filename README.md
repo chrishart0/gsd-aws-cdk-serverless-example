@@ -12,8 +12,13 @@ The best part? Initial setup only takes a few minutes, most of which is waiting 
 
 This repo uses a pattern called [Three Musketeers](https://www.drewkhoury.com/post/gsd/3-musketeers-for-an-epic-developer-experience-8676ddaf33b2/), which provides for ease of setup and a better developer experience for this complicated local testing environment, with the added benefit of using the same local commands for the CI/CD.
 
-# First Time Use
+# Overview
 
+Deploys a 3 tier serverless app to AWS and allows for easy local testing and development
+
+![Infra diagram](infrastructure/Infra-Diagram.drawio.png)
+
+# First Time Use
 
 **NOTE: None of this will work if you don't have an aws configuration file. (Which you won't if you've never made an aws config file on your machine)**
 ## How to create an AWS configuration file 
@@ -28,12 +33,12 @@ This repo uses a pattern called [Three Musketeers](https://www.drewkhoury.com/po
 # Setup
 Ensure you have `docker`, `docker-compose`, and `make` installed. 
 
-
-
 ## Configuration 
 *You can skip this step if you want to test locally and wait until you are ready to deploy to do the configs.*
 
+A prerequisite is you have a domain in AWS Route53.
 In the root of this repo make a file called `configs.env` and fill it out as show below but replacing the example values.
+If you don't know how to locate the hosted zone name or ID follow [this article](https://arcadian.cloud/aws/2022/03/22/how-to-find-hosted-zone-id-in-route53-aws-in-3-clicks/).
 ```
 THREE_M_DOMAIN=site.EXAMPLE.com
 THREE_M_HOSTED_ZONE_NAME=EXAMPLE.com
