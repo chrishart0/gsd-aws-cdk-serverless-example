@@ -31,8 +31,9 @@ Ensure you have `docker`, `docker-compose`, and `make` installed.
   
   Docker: https://www.docker.com/
   
-  Make for powershell: 1. Install chocolatey : https://chocolatey.org/install 2. Run "choco install make"
+  Will need to install an Ubuntu shell if on windows. Ie WSL
 
+  Pull the Repo into your local environment
 
 ## Configuration 
 *You can skip this step if you want to test locally and wait until you are ready to deploy to do the configs.*
