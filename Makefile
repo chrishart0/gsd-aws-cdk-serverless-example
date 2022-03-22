@@ -15,20 +15,14 @@ REGION = --region us-east-1
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-is-built: 
-	if [ ! -d ./frontend/build ]; then make build; fi
-
-# prep-env:
-# 	${COMPOSE_RUN} make _prep-env
-
 _prep-env:
 	if [ ! -f ./configs.env ]; then \
 		echo "No configs.env file found, genereating from env variables"; \
 		touch configs.env; \
 		echo "REACT_APP_USER_API_URL_LOCAL_SAM=http://localhost:3001/users" >> configs.env; \
-		echo "THREE_M_DOMAIN=${THREE_M_DOMAIN} #Domain or Subdomain to use" >> configs.env; \
-		echo "THREE_M_HOSTED_ZONE_NAME=${THREE_M_HOSTED_ZONE_NAME} #AWS Route53 Hosted Zone Name" >> configs.env; \
-		echo "THREE_M_HOSTED_ZONE_ID=${THREE_M_HOSTED_ZONE_ID} #AWS Route53 Hosted Zone ID https://arcadian.cloud/aws/2022/03/22/how-to-find-hosted-zone-id-in-route53-aws-in-3-clicks/" >> configs.env; \
+		echo "THREE_M_DOMAIN=${THREE_M_DOMAIN}" >> configs.env; \
+		echo "THREE_M_HOSTED_ZONE_NAME=${THREE_M_HOSTED_ZONE_NAME}" >> configs.env; \
+		echo "THREE_M_HOSTED_ZONE_ID=${THREE_M_HOSTED_ZONE_ID}" >> configs.env; \
 	fi
 
 _prep-env-ci:
@@ -57,7 +51,7 @@ install: _prep-env build-container install-infra install-frontend install-e2e in
 test: test-frontend test-backend test-e2e test-infra ## test the app - you can test specific parts with test-x (options are frontend, frontend-interactive, backend, e2e, infra)
 
 .PHONY: run
-run: _prep-env _launch-browser check-infra-synthed ## run the application locally (must manually run `make install` at least once)
+run: _prep-env _launch-browser check-infra-synthed _check-frontend-built ## run the application locally (must manually run `make install` at least once)
 	${COMPOSE_UP_FULL_STACK}
 
 ################
@@ -111,8 +105,11 @@ test-frontend-interactive:
 _test-frontend-interactive:
 	npm test --prefix frontend/ -- --coverage
 
+_check-frontend-built : 
+	if [ ! -d ./frontend/build ]; then make build; fi
+
 .PHONY: build
-build: 
+build: _prep-cache
 	${COMPOSE_RUN} make _build
 
 _build:
@@ -230,9 +227,9 @@ check-infra-synthed:
 	${COMPOSE_RUN} make _check-infra-synthed
 
 _check-infra-synthed:
-	if [ ! -f ./${CDK_DIR}/template.yaml ]; then make _synth; fi
+	if [ ! -s ./${CDK_DIR}/template.yaml ]; then make _synth; fi
 
-synth: _prep-cache is-built
+synth: _prep-cache
 	${COMPOSE_RUN} make _synth
 
 _synth:
