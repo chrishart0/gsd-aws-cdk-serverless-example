@@ -48,7 +48,7 @@ cli: _prep-cache
 install: _prep-env build-container install-infra install-frontend install-e2e install-backend ## create config file, build container images. For apps: build node/python modules
 
 .PHONY: test
-test: test-frontend test-backend test-e2e test-infra ## test the app - you can test specific parts with test-x (options are frontend, frontend-interactive, backend, e2e, infra)
+test: test-frontend test-backend test-infra test-e2e## test the app - you can test specific parts with test-x (options are frontend, frontend-interactive, backend, e2e, infra)
 
 .PHONY: run
 run: _prep-env _prep-cache check-infra-synthed _launch-browser ## run the application locally (must manually run `make install` at least once)
