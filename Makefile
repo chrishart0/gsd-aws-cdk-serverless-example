@@ -35,6 +35,9 @@ _prep-env-ci:
 	echo "THREE_M_DOMAIN=${THREE_M_DOMAIN}" >> configs.env; \
 	echo "THREE_M_HOSTED_ZONE_NAME=${THREE_M_HOSTED_ZONE_NAME}" >> configs.env; \
 	echo "THREE_M_HOSTED_ZONE_ID=${THREE_M_HOSTED_ZONE_ID}" >> configs.env; \
+	echo "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" >> configs.env; \
+	echo "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" >> configs.env; \
+	echo "AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}" >> configs.env; \
 
 build-container: 
 	docker-compose build
