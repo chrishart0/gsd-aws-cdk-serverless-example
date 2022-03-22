@@ -256,7 +256,7 @@ destroy:
 _destroy:
 	cd ${CDK_DIR} && cdk destroy --force ${PROFILE}
 
-diff: _prep-cache is-built ## an overview of what infra will be deployed (cdk diff)
+diff: _prep-cache _check-frontend-built ## an overview of what infra will be deployed (cdk diff)
 	${COMPOSE_RUN} make _diff
 
 _diff: _prep-cache
