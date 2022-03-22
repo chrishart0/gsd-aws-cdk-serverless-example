@@ -129,7 +129,7 @@ ci:
 	${COMPOSE_RUN} make _ci
 
 _ci:
-	npm ci --prefix frontend/
+	npm ci --prefix frontend/ --ignore-scripts
 
 ###############
 ### Backend ###
