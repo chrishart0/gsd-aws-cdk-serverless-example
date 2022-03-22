@@ -108,6 +108,6 @@ def lambda_handler(event, context):
             'Content-Type': 'application/json'
         },
         "body": json.dumps({
-            "User count": str(100),
+            "User count": str(user_count),
         }),
     }

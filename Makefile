@@ -279,6 +279,13 @@ test-e2e:
 _test-e2e:
 	cd e2e && npx playwright test --output ../test_results/ && cd .. 
 
+.PHONY: test-e2e-interactive
+test-e2e-interactive:
+	${COMPOSE_RUN_PLAYWRIGHT} make _test-e2e
+
+_test-e2e-interactive:
+	cd e2e && npx playwright test --headed --output ../test_results/ && cd .. 
+
 test-e2e-ci:
 	${COMPOSE_RUN_PLAYWRIGHT} make _test-e2e-ci
 
