@@ -82,6 +82,12 @@ jobs:
     - name: Build
       run: make ci
 
+    - name: Infra Diff
+      run: make diff
+
+    - name: Deploy
+      run: make deploy
+
     # - name: SonarCloud Scan
     #   uses: sonarsource/sonarcloud-github-action@v1.6
     #   env:
