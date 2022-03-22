@@ -7,13 +7,10 @@ services:
     tty: true    
     command: ${COMPOSE_COMMAND:-bash}
     working_dir: $PWD
-    environment:
-      - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
-      - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
-      - AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
     env_file:
       - configs.env
     volumes:
+      - ~/.npm/:$HOME
       - $PWD:$PWD
       - ~/.aws/:/root/.aws:ro
       # - ~/.npm:~/.npm #npm cache

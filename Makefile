@@ -7,7 +7,7 @@ COMPOSE_UP_FRONTEND = docker-compose up frontend
 COMPOSE_UP_BACKEND = docker-compose up dynamodb sam
 COMPOSE_RUN_PLAYWRIGHT = docker-compose run --rm playwright
 COMPOSE_UP = docker-compose up base
-PROFILE = --profile default
+PROFILE = --profile aws-demo
 REGION = --region us-east-1
 
 .DEFAULT_GOAL := help
