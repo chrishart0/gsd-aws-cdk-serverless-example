@@ -11,8 +11,8 @@ services:
       - configs.env
     volumes:
       - $PWD:$PWD
-      # - /var/run/docker.sock:/var/run/docker.sock #Needed so a docker container can be run from inside a docker container
       - ~/.aws/:/root/.aws:ro
+      # - ~/.npm:~/.npm #npm cache
     ports:
       - "3000:3000"
 

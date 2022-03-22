@@ -39,7 +39,6 @@ jobs:
     - name: Prep Configs
       run: | 
         make _prep-env-ci
-        cat configs.env
       env:
         THREE_M_DOMAIN: ${{ secrets.THREE_M_DOMAIN }}
         THREE_M_HOSTED_ZONE_NAME: ${{ secrets.THREE_M_HOSTED_ZONE_NAME }}
