@@ -51,7 +51,7 @@ install: _prep-env build-container install-infra install-frontend install-e2e in
 test: test-frontend test-backend test-e2e test-infra ## test the app - you can test specific parts with test-x (options are frontend, frontend-interactive, backend, e2e, infra)
 
 .PHONY: run
-run: _prep-env _launch-browser check-infra-synthed _check-frontend-built ## run the application locally (must manually run `make install` at least once)
+run: _prep-env _prep-cache check-infra-synthed _launch-browser ## run the application locally (must manually run `make install` at least once)
 	${COMPOSE_UP_FULL_STACK}
 
 ################
@@ -227,9 +227,9 @@ check-infra-synthed:
 	${COMPOSE_RUN} make _check-infra-synthed
 
 _check-infra-synthed:
-	if [ ! -s ./${CDK_DIR}/template.yaml ]; then make _synth; fi
+	if [ ! -s ./${CDK_DIR}/template.yaml ]; then make _build && make _synth; else echo "found template.yaml"; fi
 
-synth: _prep-cache
+synth: _prep-cache _check-frontend-built
 	${COMPOSE_RUN} make _synth
 
 _synth:
