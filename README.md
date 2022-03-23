@@ -1,10 +1,11 @@
 # GSD-AWS-CDK-Serverless-Example
-[![CI](https://github.com/chrishart0/gsd-aws-cdk-serverless-example/actions/workflows/CI.yml/badge.svg)](https://github.com/chrishart0/gsd-aws-cdk-serverless-example/actions/workflows/CI.yml)
+[![CICD](https://github.com/chrishart0/gsd-aws-cdk-serverless-example/actions/workflows/CICD.yml/badge.svg)](https://github.com/chrishart0/gsd-aws-cdk-serverless-example/actions/workflows/CICD.yml)
 [![CodeQL](https://github.com/chrishart0/gsd-aws-cdk-serverless-example/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/chrishart0/gsd-aws-cdk-serverless-example/actions/workflows/codeql-analysis.yml)
 [![codecov](https://codecov.io/gh/chrishart0/gsd-aws-cdk-serverless-example/branch/master/graph/badge.svg?token=LUPPA172C2)](https://codecov.io/gh/chrishart0/gsd-aws-cdk-serverless-example)
 
 Live Demo: [awsdemo.chrishart.cloud](https://awsdemo.chrishart.cloud/)
 
+Skips the reading and get right to the good stuff
 ## Why?
 Local AWS development can be tough to get right, especially when it comes to local testing. This repo demonstrates how to easily use S3 for a static front end, Lambda + API Gateway for a logic tier, and DynamoDB for a persistance tier - all while still being able to easily test everything locally.
 
@@ -42,7 +43,8 @@ Ensure you have `docker`, `docker-compose`, and `make` installed.
   Pull the Repo into your local environment
 
 ## Configuration 
-*You can skip this step if you want to test locally and wait until you are ready to deploy to do the configs.*
+
+*You can skip this and go strait to start it up locally*
 
 A prerequisite is you have a domain in AWS Route53.
 In the root of this repo make a file called `configs.env` and fill it out as show below but replacing the example values.
@@ -59,6 +61,8 @@ REACT_APP_USER_API_URL_LOCAL_SAM=http://localhost:3001/users
 *Note: You should not have to change `REACT_APP_USER_API_URL_LOCAL_SAM` as the demo is designed to work on `localhost:3001`.*
 
 ## Start it up locally
+
+Clone this repo down and `cd` into it.
 
 `make install` - Install needed dependencies 
 
@@ -85,7 +89,6 @@ Get a overview of what will be deployed
 
 # More Details
 ## Working with the frontend
-
 ### Dependencies
 3 Musketeers allows us to get away without installing Node or NPM locally but how do we manage dependencies? To get access to the full npm cli just run `make cli` and you are free to run any commands you wish.
 
@@ -94,11 +97,11 @@ Get a overview of what will be deployed
 # Enter into the three musketeers container
 $ make cli
 
-# Install the new dependecy
+# Install the new dependency
 $ npm install --save-dev playwright
 
 # Exit the Container
-$exit
+$ exit
 ```
 
 ## Testing
@@ -108,7 +111,9 @@ There are severl kinds of tests included in this repo:
 * [AWS CDK Infrastructure Unit Tests:](infrastructure/test/infrastructure.test.ts) find docs [here](https://docs.aws.amazon.com/cdk/v2/guide/testing.html)
 * [Backend Unit Tests](backend/tests/unit/test_handler.py)
 
-`make test` - Run all tests: currently frontend unit and e2e
+`make lint` - Runs all linters: Currently only frontend
+
+`make test` - Run all tests: currently - frontend unit/linter, backend unit, infra unit, and e2e
 
 `make test-frontend` - Runs `npm test` in CI mode, which simply outputs the results of the tests once.
 
@@ -166,12 +171,19 @@ Devs don't do local testing (because it's too hard or takes too much time).
 A non-exhaustive list of items left to be addressed.
 
 * CI/CD
-  * Split e2e testing into own run to speedup CI/CD
+  * Run local e2e
+  * Run e2e after deploy
   * Investigate pre-building containers for faster CI/CD
-  * Figure out a way to automatically include AWS config file 
 
 * Local Dynamo
   * Cannot run more than one container/(template)repo at the same time 
+
+* Linting
+  * Backend
+  * e2e
+  * IaC
+
+* Upgrade SAM version, currently pegged to an old version
 
 * Monitoring
   * Make a CloudWatch dashboard

@@ -7,13 +7,11 @@ test.beforeEach(async ({ page }) => {
 
 test.describe('Front page, non-interactive tests', () => {
 
-  test('header appears as expected', async ({ page }) => {    
-    await expect(page.locator('.header')).toBeVisible();
+  test('header appears as expected', async ({ page }) => { 
     await expect(page.locator('text="Welcome to this demo site!"')).toBeVisible();
   });
 
-  test('footer appears as expected', async ({ page }) => {    
-    await expect(page.locator('.footer')).toBeVisible();
+  test('footer appears as expected', async ({ page }) => { 
     await expect(page.locator('text="Edit on Github!"')).toBeVisible();
   });
 
@@ -23,7 +21,6 @@ test.describe('Test Navigation Bar', () => {
 
   test('Navbar appears as expected', async ({ page }) => {    
     await expect(page.locator('.AppBar')).toBeVisible();
-    //await expect(page.locator()
   });
 
 });

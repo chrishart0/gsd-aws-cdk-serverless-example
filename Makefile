@@ -20,9 +20,9 @@ _prep-env:
 		echo "No configs.env file found, genereating from env variables"; \
 		touch configs.env; \
 		echo "REACT_APP_USER_API_URL_LOCAL_SAM=http://localhost:3001/users" >> configs.env; \
-		echo "REACT_APP_DOMAIN=my.domain" >> configs.env; \
-		echo "REACT_APP_HOSTED_ZONE_NAME=my.aws.hostedzone.name" >> configs.env; \
-		echo "REACT_APP_HOSTED_ZONE_ID=myHostedZoneID123" >> configs.env; \
+		echo "REACT_APP_DOMAIN=${REACT_APP_DOMAIN}" >> configs.env; \
+		echo "REACT_APP_HOSTED_ZONE_NAME=${REACT_APP_HOSTED_ZONE_NAME}" >> configs.env; \
+		echo "REACT_APP_HOSTED_ZONE_ID=${REACT_APP_HOSTED_ZONE_ID}" >> configs.env; \
 	fi
 
 _prep-env-ci:
@@ -53,18 +53,34 @@ cli: _prep-cache
 
 # These commands run processes acorss the mulitple layers of the project
 .PHONY: install
-install: _prep-env build-container install-infra install-frontend install-e2e install-backend ## create config file, build container images. For apps: build node/python modules
+install: _prep-env build-container install-infra install-frontend install-e2e install-backend ## Initial setup - create config file, build container images, installs deps
 
 .PHONY: test
-test: test-frontend test-backend test-infra test-e2e## test the app - you can test specific parts with test-x (options are frontend, frontend-interactive, backend, e2e, infra)
+test: test-frontend-lint test-frontend test-backend test-infra test-e2e## test the app - you can test specific parts with test-x (options are frontend, frontend-interactive, backend, e2e, infra)
 
 .PHONY: run
-run: _prep-env _prep-cache _check-aws-creds_configured check-infra-synthed down _launch-browser ## run the application locally (must manually run `make install` at least once)
+run: _prep-env _prep-cache check-infra-synthed _check-aws-creds_configured  down _launch-browser ## run the application locally (must manually run `make install` at least once)
 	${COMPOSE_UP_FULL_STACK}
+
+.PHONY: lint
+lint: lint-frontend-write ## runs the linter to make code formatting changes to enhance readability. ALWAYS run this before deploy
+
 
 ################
 ### Frontend ###
 ################
+
+lint-frontend-write:
+	${COMPOSE_RUN_PLAYWRIGHT} make _lint-frontend-write
+
+_lint-frontend-write:
+	cd frontend &&  npx prettier --write . && cd .. 
+
+test-frontend-lint:
+	${COMPOSE_RUN_PLAYWRIGHT} make _test-frontend-lint
+
+_test-frontend-lint:
+	cd frontend &&  echo "Run the command make lint if formatting check fails" && npx prettier --check . && cd .. 
 
 check-frontend-installed: 
 	${COMPOSE_RUN} make _check-frontend-installed
@@ -249,7 +265,7 @@ bootstrap: _prep-cache
 _bootstrap:
 	cd ${CDK_DIR} && cdk bootstrap ${PROFILE}
 
-deploy: _prep-cache build
+deploy: _prep-cache build ## deploys project to AWS with the configs specified in configs.env
 	${COMPOSE_RUN} make _deploy 
 
 deploy-no-build: _prep-cache
@@ -287,12 +303,13 @@ test-e2e:
 _test-e2e:
 	cd e2e && npx playwright test --output ../test_results/ && cd .. 
 
-.PHONY: test-e2e-interactive
-test-e2e-interactive:
-	${COMPOSE_RUN_PLAYWRIGHT} make _test-e2e
+# ToDo Make this work
+# .PHONY: test-e2e-interactive
+# test-e2e-interactive:
+# 	${COMPOSE_RUN_PLAYWRIGHT} make _test-e2e
 
-_test-e2e-interactive:
-	cd e2e && npx playwright test --headed --output ../test_results/ && cd .. 
+# _test-e2e-interactive:
+# 	cd e2e && npx playwright test --headed --output ../test_results/ && cd .. 
 
 test-e2e-ci:
 	${COMPOSE_RUN_PLAYWRIGHT} make _test-e2e-ci
