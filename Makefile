@@ -20,15 +20,15 @@ _prep-env:
 		echo "No configs.env file found, genereating from env variables"; \
 		touch configs.env; \
 		echo "REACT_APP_USER_API_URL_LOCAL_SAM=http://localhost:3001/users" >> configs.env; \
-		echo "THREE_M_DOMAIN=${THREE_M_DOMAIN}" >> configs.env; \
-		echo "THREE_M_HOSTED_ZONE_NAME=${THREE_M_HOSTED_ZONE_NAME}" >> configs.env; \
-		echo "THREE_M_HOSTED_ZONE_ID=${THREE_M_HOSTED_ZONE_ID}" >> configs.env; \
+		echo "REACT_APP_DOMAIN=${REACT_APP_DOMAIN}" >> configs.env; \
+		echo "REACT_APP_HOSTED_ZONE_NAME=${REACT_APP_HOSTED_ZONE_NAME}" >> configs.env; \
+		echo "REACT_APP_HOSTED_ZONE_ID=${REACT_APP_HOSTED_ZONE_ID}" >> configs.env; \
 	fi
 
 _prep-env-ci:
-	echo "THREE_M_DOMAIN=${THREE_M_DOMAIN}" >> configs.env; \
-	echo "THREE_M_HOSTED_ZONE_NAME=${THREE_M_HOSTED_ZONE_NAME}" >> configs.env; \
-	echo "THREE_M_HOSTED_ZONE_ID=${THREE_M_HOSTED_ZONE_ID}" >> configs.env; \
+	echo "REACT_APP_DOMAIN=${REACT_APP_DOMAIN}" >> configs.env; \
+	echo "REACT_APP_HOSTED_ZONE_NAME=${REACT_APP_HOSTED_ZONE_NAME}" >> configs.env; \
+	echo "REACT_APP_HOSTED_ZONE_ID=${REACT_APP_HOSTED_ZONE_ID}" >> configs.env; \
 	aws --profile default configure set aws_access_key_id "${AWS_ACCESS_KEY_ID}"
 	aws --profile default configure set aws_secret_access_key "${AWS_SECRET_ACCESS_KEY}"
 	aws --profile default configure set aws_default_region "${AWS_DEFAULT_REGION}"
@@ -51,7 +51,7 @@ install: _prep-env build-container install-infra install-frontend install-e2e in
 test: test-frontend test-backend test-infra test-e2e## test the app - you can test specific parts with test-x (options are frontend, frontend-interactive, backend, e2e, infra)
 
 .PHONY: run
-run: _prep-env _prep-cache check-infra-synthed _launch-browser ## run the application locally (must manually run `make install` at least once)
+run: _prep-env _prep-cache check-infra-synthed down _launch-browser ## run the application locally (must manually run `make install` at least once)
 	${COMPOSE_UP_FULL_STACK}
 
 ################
@@ -72,7 +72,7 @@ _install-frontend npm-install-frontend:
 	npm install --prefix frontend/
 
 _launch-browser: #Haven't tested on mac, not sure what will happen ToDo: instead of wait 10 seconds, wait for site to be loaded
-	nohup sleep 5 && xdg-open http://localhost:3000 || open "http://localhost:3000" || explorer.exe "http://localhost:3000"  >/dev/null 2>&1 &
+	nohup sleep 20 && xdg-open http://localhost:3000 || open "http://localhost:3000" || explorer.exe "http://localhost:3000"  >/dev/null 2>&1 &
 
 #ToDo: Frontend doesn't go down when you kill it. Ctrl+c or z should kill the container
 #ToDo: handling for when port 3000 is already in use

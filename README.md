@@ -40,9 +40,9 @@ A prerequisite is you have a domain in AWS Route53.
 In the root of this repo make a file called `configs.env` and fill it out as show below but replacing the example values.
 If you don't know how to locate the hosted zone name or ID follow [this article](https://arcadian.cloud/aws/2022/03/22/how-to-find-hosted-zone-id-in-route53-aws-in-3-clicks/).
 ```
-THREE_M_DOMAIN=site.EXAMPLE.com
-THREE_M_HOSTED_ZONE_NAME=EXAMPLE.com
-THREE_M_HOSTED_ZONE_ID=123ASDFGH456AQWER34T4V1C
+REACT_APP_DOMAIN=site.EXAMPLE.com
+REACT_APP_HOSTED_ZONE_NAME=EXAMPLE.com
+REACT_APP_HOSTED_ZONE_ID=123ASDFGH456AQWER34T4V1C
 REACT_APP_USER_API_URL_LOCAL_SAM=http://localhost:3001/users
 ```
 
@@ -156,19 +156,12 @@ Devs don't do local testing (because it's too hard or takes too much time).
 A non-exhaustive list of items left to be addressed.
 
 * CI/CD
-  * Quality Scan: Add <https://www.sonarqube.org/downloads/> community edition to CI/CD. Use [this](https://github.com/contino/gsd-hello-world/blob/main/.github/workflows/quality.yml) as reference
-  * 80% unit test coverage
-    * Frontend
-    * Backend
-  * Add env handling to Github Actions
-  * Get deploys working in GitHub actions
   * Split e2e testing into own run to speedup CI/CD
-  * Add npm caching to speed up CI/CD
   * Investigate pre-building containers for faster CI/CD
   * Figure out a way to automatically include AWS config file 
 
-* Lambda API
-  * Add unit tests to lambda function
+* Local Dynamo
+  * Cannot run more than one container/(template)repo at the same time 
 
 * Monitoring
   * Make a CloudWatch dashboard
