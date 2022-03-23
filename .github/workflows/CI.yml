@@ -41,10 +41,13 @@ jobs:
       run: |
         make install
 
-    # - name: Run
-    #   run: |
-    #     make run
+    - name: Run
+      run: |
+        nohup make run &
 
+    - name: Test
+      run: |
+        make test
   build:
     
     runs-on: ubuntu-latest

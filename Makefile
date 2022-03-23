@@ -72,7 +72,7 @@ _install-frontend npm-install-frontend:
 	npm install --prefix frontend/
 
 _launch-browser: #Haven't tested on mac, not sure what will happen ToDo: instead of wait 10 seconds, wait for site to be loaded
-	nohup sleep 20 && xdg-open http://localhost:3000 || open "http://localhost:3000" || explorer.exe "http://localhost:3000"  >/dev/null 2>&1 &
+	nohup sleep 13 && xdg-open http://localhost:3000 || open "http://localhost:3000" || explorer.exe "http://localhost:3000"  >/dev/null 2>&1 &
 
 #ToDo: Frontend doesn't go down when you kill it. Ctrl+c or z should kill the container
 #ToDo: handling for when port 3000 is already in use
