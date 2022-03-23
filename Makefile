@@ -34,9 +34,10 @@ _prep-env-ci:
 	aws --profile default configure set aws_default_region "${AWS_DEFAULT_REGION}"
 
 _check-aws-creds_configured:
-	if [ ! -s  ~/.aws/config ]; then make _prep-env-fake-aws-creds ; else echo "found aws creds"; fi
+	if [ ! -d  ~/.aws ]; then make _prep-env-fake-aws-creds ; else echo "found aws creds"; fi
 
 _prep-env-fake-aws-creds:
+	mkdir ~/.aws
 	aws --profile default configure set aws_access_key_id "abc123fake"
 	aws --profile default configure set aws_secret_access_key "def456fake"
 	aws --profile default configure set aws_default_region "us-fake-7"
@@ -53,13 +54,13 @@ cli: _prep-cache
 
 # These commands run processes acorss the mulitple layers of the project
 .PHONY: install
-install: _prep-env build-container install-infra install-frontend install-e2e install-backend ## Initial setup - create config file, build container images, installs deps
+install: _check-aws-creds_configured _prep-env build-container install-infra install-frontend install-e2e install-backend ## Initial setup - create config file, build container images, installs deps
 
 .PHONY: test
 test: test-frontend-lint test-frontend test-backend test-infra test-e2e## test the app - you can test specific parts with test-x (options are frontend, frontend-interactive, backend, e2e, infra)
 
 .PHONY: run
-run: _prep-env _prep-cache check-infra-synthed _check-aws-creds_configured  down _launch-browser ## run the application locally (must manually run `make install` at least once)
+run: _prep-env _prep-cache check-infra-synthed  down _launch-browser ## run the application locally (must manually run `make install` at least once)
 	${COMPOSE_UP_FULL_STACK}
 
 .PHONY: lint
