@@ -20,9 +20,9 @@ _prep-env:
 		echo "No configs.env file found, genereating from env variables"; \
 		touch configs.env; \
 		echo "REACT_APP_USER_API_URL_LOCAL_SAM=http://localhost:3001/users" >> configs.env; \
-		echo "REACT_APP_DOMAIN=${REACT_APP_DOMAIN}" >> configs.env; \
-		echo "REACT_APP_HOSTED_ZONE_NAME=${REACT_APP_HOSTED_ZONE_NAME}" >> configs.env; \
-		echo "REACT_APP_HOSTED_ZONE_ID=${REACT_APP_HOSTED_ZONE_ID}" >> configs.env; \
+		echo "REACT_APP_DOMAIN=my.domain" >> configs.env; \
+		echo "REACT_APP_HOSTED_ZONE_NAME=my.aws.hostedzone.name" >> configs.env; \
+		echo "REACT_APP_HOSTED_ZONE_ID=myHostedZoneID123" >> configs.env; \
 	fi
 
 _prep-env-ci:
@@ -32,6 +32,11 @@ _prep-env-ci:
 	aws --profile default configure set aws_access_key_id "${AWS_ACCESS_KEY_ID}"
 	aws --profile default configure set aws_secret_access_key "${AWS_SECRET_ACCESS_KEY}"
 	aws --profile default configure set aws_default_region "${AWS_DEFAULT_REGION}"
+
+_prep-env-fake-aws-creds:
+	aws --profile default configure set aws_access_key_id "abc123"
+	aws --profile default configure set aws_secret_access_key "def456"
+	aws --profile default configure set aws_default_region "us-south-7"
 
 build-container: 
 	docker-compose build

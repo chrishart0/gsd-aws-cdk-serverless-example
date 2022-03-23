@@ -14,7 +14,7 @@ This repo uses a pattern called [Three Musketeers](https://www.drewkhoury.com/po
 
 # Overview
 
-Deploys a 3 tier serverless app to AWS and allows for easy local testing and development
+Deploys a 3 tier serverless app to AWS and allows for easy local testing and development. 
 
 ![Infra diagram](infrastructure/Infra-Diagram.drawio.png)
 

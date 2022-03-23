@@ -1,18 +1,17 @@
-name: CI
+name: CICD
 
 on:
   push:
     # Publish `master` as Docker `latest` image.
     branches:
-      - *
-      - !master
+      - master
 
     # Publish `v1.2.3` tags as releases.
     tags:
       - v*
 
-  # Run tests for any PRs.
-  pull_request:
+# env:
+#   IMAGE_NAME: go-hello-world
 
 jobs:
 
@@ -25,6 +24,13 @@ jobs:
     - name: checkout code
       uses: actions/checkout@v2
 
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
     - name: Prep Configs
       run: | 
         make _prep-env-ci
@@ -33,6 +39,9 @@ jobs:
         REACT_APP_HOSTED_ZONE_NAME: ${{ secrets.REACT_APP_HOSTED_ZONE_NAME }}
         REACT_APP_HOSTED_ZONE_ID: ${{ secrets.REACT_APP_HOSTED_ZONE_ID }}
         REACT_APP_USER_API_DOMAIN: ${{ secrets.REACT_APP_USER_API_DOMAIN }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
 
     - uses: satackey/action-docker-layer-caching@v0.0.11
       # Ignore the failure of a step and avoid terminating the job.
@@ -85,7 +94,7 @@ jobs:
         REACT_APP_DOMAIN: ${{ secrets.REACT_APP_DOMAIN }}
 
     - name: Infra Diff
-      run: make synth
+      run: make diff
       env:
         REACT_APP_DOMAIN: ${{ secrets.REACT_APP_DOMAIN }}
         REACT_APP_HOSTED_ZONE_NAME: ${{ secrets.REACT_APP_HOSTED_ZONE_NAME }}
@@ -94,6 +103,9 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+
+    - name: Deploy
+      run: make deploy
 
     # - name: SonarCloud Scan
     #   uses: sonarsource/sonarcloud-github-action@v1.6
@@ -129,7 +141,7 @@ jobs:
 
     - name: Run
       run: |
-        _prep-env-fake-aws-creds:
+        make _prep-env-fake-aws-creds
         make run
 
     - name: Test
