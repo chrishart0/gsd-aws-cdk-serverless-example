@@ -71,9 +71,7 @@ function App() {
             This demo shows how to use a static site hosted in S3, a Lambda function + APG, and DynamoDB. All testing locally and in the
             CI/CD.
           </Typography>
-          <Typography variant="h2">
-            Hello Demo!
-          </Typography>
+          <Typography variant="h2">Hello Demo!</Typography>
           <br />
           <Typography>
             <a href="https://github.com/chrishart0/gsd-aws-cdk-serverless-example" target="_blank" rel="noreferrer">
