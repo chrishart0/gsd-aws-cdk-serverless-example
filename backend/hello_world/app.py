@@ -23,6 +23,18 @@ else: # Running in AWS
 
 logger.info("Finished conditional dynamodb logic")
 
+def returnError():
+    logger.error('Returning 500 status code')
+    return {
+            "statusCode": 500,
+            'headers': {
+                'Access-Control-Allow-Origin': os.environ['CORS_URL'],
+                'Access-Control-Allow-Credentials': 'true',
+                'Access-Control-Allow-Headers': 'Authorization',
+                'Content-Type': 'application/json'
+            }
+        }
+
 def getUserCount():
     try:
         logger.info("Querying DDB")
@@ -44,8 +56,10 @@ def getUserCount():
     except ClientError as e:
         if e.response['Error']['Code'] == 'RequestLimitExceeded':
             logger.error('ERROR: ', e)
+            returnError()
         else:
             logger.error("UNEXPECTED ERROR from DDB: %s" % e)
+            returnError()
 
 def updateUserCount(count):
     try:
@@ -65,13 +79,26 @@ def updateUserCount(count):
         else:
             logger.error("UNEXPECTED ERROR from DDB: %s" % e)
 
-
-
 def lambda_handler(event, context):
+
+    logger.info("Lambda handler invocation initiated")
 
     user_count = getUserCount()
     updateUserCount(user_count)
 
+    if not (user_count):
+        logger.error('Something went wrong, returning 500')
+        return {
+        "statusCode": 500,
+        'headers': {
+            'Access-Control-Allow-Origin': os.environ['CORS_URL'],
+            'Access-Control-Allow-Credentials': 'true',
+            'Access-Control-Allow-Headers': 'Authorization',
+            'Content-Type': 'application/json'
+        }
+    }
+
+    logger.error('Function completed successfully, returning 200')
     return {
         "statusCode": 200,
         'headers': {

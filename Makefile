@@ -1,5 +1,5 @@
 SHELL=/bin/bash
-CDK_DIR=infrastructure/
+CDK_DIR=infrastructure
 COMPOSE_RUN = docker-compose run --rm base
 COMPOSE_RUN_WITH_PORTS = docker-compose run -d --name base --service-ports --rm base
 COMPOSE_UP_FULL_STACK = docker-compose up dynamodb sam frontend
@@ -15,28 +15,23 @@ REGION = --region us-east-1
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-is-built: 
-	if [ ! -d ./frontend/build ]; then make build; fi
-
-# prep-env:
-# 	${COMPOSE_RUN} make _prep-env
-
 _prep-env:
 	if [ ! -f ./configs.env ]; then \
 		echo "No configs.env file found, genereating from env variables"; \
 		touch configs.env; \
 		echo "REACT_APP_USER_API_URL_LOCAL_SAM=http://localhost:3001/users" >> configs.env; \
-		echo "THREE_M_DOMAIN=${THREE_M_DOMAIN}" >> configs.env; \
-		echo "THREE_M_HOSTED_ZONE_NAME=${THREE_M_HOSTED_ZONE_NAME}" >> configs.env; \
-		echo "THREE_M_HOSTED_ZONE_ID=${THREE_M_HOSTED_ZONE_ID}" >> configs.env; \
-		echo "REACT_APP_USER_API_DOMAIN=${REACT_APP_USER_API_DOMAIN}" >> configs.env; \
+		echo "REACT_APP_DOMAIN=${REACT_APP_DOMAIN}" >> configs.env; \
+		echo "REACT_APP_HOSTED_ZONE_NAME=${REACT_APP_HOSTED_ZONE_NAME}" >> configs.env; \
+		echo "REACT_APP_HOSTED_ZONE_ID=${REACT_APP_HOSTED_ZONE_ID}" >> configs.env; \
 	fi
 
 _prep-env-ci:
-	echo "THREE_M_DOMAIN=${THREE_M_DOMAIN}" >> configs.env; \
-	echo "THREE_M_HOSTED_ZONE_NAME=${THREE_M_HOSTED_ZONE_NAME}" >> configs.env; \
-	echo "THREE_M_HOSTED_ZONE_ID=${THREE_M_HOSTED_ZONE_ID}" >> configs.env; \
-	echo "REACT_APP_USER_API_DOMAIN=${REACT_APP_USER_API_DOMAIN}" >> configs.env; \
+	echo "REACT_APP_DOMAIN=${REACT_APP_DOMAIN}" >> configs.env; \
+	echo "REACT_APP_HOSTED_ZONE_NAME=${REACT_APP_HOSTED_ZONE_NAME}" >> configs.env; \
+	echo "REACT_APP_HOSTED_ZONE_ID=${REACT_APP_HOSTED_ZONE_ID}" >> configs.env; \
+	aws --profile default configure set aws_access_key_id "${AWS_ACCESS_KEY_ID}"
+	aws --profile default configure set aws_secret_access_key "${AWS_SECRET_ACCESS_KEY}"
+	aws --profile default configure set aws_default_region "${AWS_DEFAULT_REGION}"
 
 build-container: 
 	docker-compose build
@@ -50,13 +45,13 @@ cli: _prep-cache
 
 # These commands run processes acorss the mulitple layers of the project
 .PHONY: install
-install npm-install: _prep-env build-container install-infra install-frontend install-e2e install-backend synth
+install: _prep-env build-container install-infra install-frontend install-e2e install-backend ## create config file, build container images. For apps: build node/python modules
 
 .PHONY: test
-test: test-frontend test-e2e test-infra
+test: test-frontend test-backend test-infra test-e2e## test the app - you can test specific parts with test-x (options are frontend, frontend-interactive, backend, e2e, infra)
 
 .PHONY: run
-run: _prep-env _launch-browser check-infra-synthed
+run: _prep-env _prep-cache check-infra-synthed down _launch-browser ## run the application locally (must manually run `make install` at least once)
 	${COMPOSE_UP_FULL_STACK}
 
 ################
@@ -77,7 +72,7 @@ _install-frontend npm-install-frontend:
 	npm install --prefix frontend/
 
 _launch-browser: #Haven't tested on mac, not sure what will happen ToDo: instead of wait 10 seconds, wait for site to be loaded
-	nohup sleep 5 && xdg-open http://localhost:3000 || open "http://localhost:3000" || explorer.exe "http://localhost:3000"  >/dev/null 2>&1 &
+	nohup sleep 13 && xdg-open http://localhost:3000 || open "http://localhost:3000" || explorer.exe "http://localhost:3000"  >/dev/null 2>&1 &
 
 #ToDo: Frontend doesn't go down when you kill it. Ctrl+c or z should kill the container
 #ToDo: handling for when port 3000 is already in use
@@ -101,17 +96,20 @@ test-frontend:
 	${COMPOSE_RUN} make _test-frontend
 
 _test-frontend:
-	export CI=true && npm test --prefix frontend/
+	CI=true npm run coverage --prefix frontend/ 
 
 .PHONY: test-frontend-interactive
 test-frontend-interactive: 
 	${COMPOSE_RUN} make _test-frontend-interactive
 
 _test-frontend-interactive:
-	npm test --prefix frontend/
+	npm test --prefix frontend/ -- --coverage
+
+_check-frontend-built : 
+	if [ ! -d ./frontend/build ]; then make build; fi
 
 .PHONY: build
-build: 
+build: _prep-cache
 	${COMPOSE_RUN} make _build
 
 _build:
@@ -128,7 +126,7 @@ ci:
 	${COMPOSE_RUN} make _ci
 
 _ci:
-	npm ci --prefix frontend/
+	npm ci --prefix frontend/ --ignore-scripts
 
 ###############
 ### Backend ###
@@ -164,7 +162,7 @@ test-backend-unit:
 	${COMPOSE_RUN} make _test-backend-unit
 
 _test-backend-unit:
-	cd backend && LOG_LEVEL=INFO AWSENV=AWSENV TABLE_NAME=visitorCount CORS_URL=http://localhost:3000 AWS_DEFAULT_REGION=us-east-1 python -m pytest tests/unit -v --cov=hello_world --cov-report=xml:../coverage-reports/backend-unit-coverage.xml && cd ..
+	cd backend && LOG_LEVEL=INFO AWSENV=AWSENV TABLE_NAME=visitorCount CORS_URL=http://localhost:3000 AWS_DEFAULT_REGION=us-east-1 python -m pytest tests/unit -v --cov=hello_world --cov-report xml --cov-fail-under 80 && cd ..
 
 # Monitor lambda function logs which was deployed from local
 # ToDo: Monitor other lambda functions
@@ -229,9 +227,9 @@ check-infra-synthed:
 	${COMPOSE_RUN} make _check-infra-synthed
 
 _check-infra-synthed:
-	if [ ! -f ./${CDK_DIR}/template.yaml ]; then make synth; fi
+	if [ ! -s ./${CDK_DIR}/template.yaml ]; then make _build && make _synth; else echo "found template.yaml"; fi
 
-synth: _prep-cache is-built
+synth: _prep-cache _check-frontend-built
 	${COMPOSE_RUN} make _synth
 
 _synth:
@@ -258,7 +256,7 @@ destroy:
 _destroy:
 	cd ${CDK_DIR} && cdk destroy --force ${PROFILE}
 
-diff: _prep-cache is-built
+diff: _prep-cache _check-frontend-built ## an overview of what infra will be deployed (cdk diff)
 	${COMPOSE_RUN} make _diff
 
 _diff: _prep-cache
@@ -280,6 +278,13 @@ test-e2e:
 
 _test-e2e:
 	cd e2e && npx playwright test --output ../test_results/ && cd .. 
+
+.PHONY: test-e2e-interactive
+test-e2e-interactive:
+	${COMPOSE_RUN_PLAYWRIGHT} make _test-e2e
+
+_test-e2e-interactive:
+	cd e2e && npx playwright test --headed --output ../test_results/ && cd .. 
 
 test-e2e-ci:
 	${COMPOSE_RUN_PLAYWRIGHT} make _test-e2e-ci

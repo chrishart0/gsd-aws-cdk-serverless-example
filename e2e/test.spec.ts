@@ -19,6 +19,15 @@ test.describe('Front page, non-interactive tests', () => {
 
 });
 
+test.describe('Test Navigation Bar', () => {
+
+  test('Navbar appears as expected', async ({ page }) => {    
+    await expect(page.locator('.AppBar')).toBeVisible();
+    //await expect(page.locator()
+  });
+
+});
+
 test.describe('that visitor counter works', () => {
 
   test('visitor counter is visible', async ({ page }) => {    

@@ -18,10 +18,10 @@ export class InfrastructureStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
     
-    const hostedZoneId:string = process.env.THREE_M_HOSTED_ZONE_ID!
-    const hostedZoneName:string = process.env.THREE_M_HOSTED_ZONE_NAME!
-    const siteDomain:string = process.env.THREE_M_DOMAIN!
-    const apiDomain = process.env.REACT_APP_USER_API_DOMAIN!
+    const hostedZoneId:string = process.env.REACT_APP_HOSTED_ZONE_ID!
+    const hostedZoneName:string = process.env.REACT_APP_HOSTED_ZONE_NAME!
+    const siteDomain:string = process.env.REACT_APP_DOMAIN!
+    const apiDomain = 'api.' + siteDomain
 
     const zone = route53.HostedZone.fromHostedZoneAttributes(this, 'zone', {
       zoneName: hostedZoneName,

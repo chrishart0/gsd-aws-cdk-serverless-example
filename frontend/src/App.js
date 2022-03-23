@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
+import Navbar from 'components/navBar';
 import './App.css'; 
 
 import githubLogo from 'images/githubLogo.png'
@@ -9,11 +10,12 @@ function App() {
   const [userCount, setUserCount] = useState(false);
 
   //Special handling to use localhost SAM API if running locally via npm start(make run)
-  const apiUrl = (process.env.NODE_ENV !== 'development') ? 'https://' + process.env.REACT_APP_USER_API_DOMAIN + '/users' : process.env.REACT_APP_USER_API_URL_LOCAL_SAM
-  console.log('apiUrl: ', apiUrl)
-
-  //Prevent continuous reloading calling API each time
-  useEffect(() => {
+  const apiUrl = (process.env.NODE_ENV !== 'development') ? 'https://api.' + process.env.REACT_APP_DOMAIN + '/users' : process.env.REACT_APP_USER_API_URL_LOCAL_SAM
+console.log("apiUrl:" + apiUrl)
+console.log("process.env.NODE_ENV:" + process.env.NODE_ENV)
+console.log("process.env.REACT_APP_DOMAIN:" + process.env.REACT_APP_DOMAIN)
+console.log("process.env.REACT_APP_USER_API_URL_LOCAL_SAM:" + process.env.REACT_APP_USER_API_URL_LOCAL_SAM)
+  async function fetchUserCount() {
     fetch(apiUrl)
     .then(response => response.json())
     .then(response => {
@@ -23,12 +25,16 @@ function App() {
     .catch(err => {
       console.log(err);
     });
+  }
+
+  //Prevent continuous reloading calling API each time
+  useEffect(() => {
+    fetchUserCount();
   }, [] );
-  
-  console.log('userCount:', userCount)
 
   return (
     <div className="App">
+      <Navbar className ="AppBar"/>
       <header className="App-header">
         <Container className='header' maxWidth='md'>
           <Typography variant='h2'>

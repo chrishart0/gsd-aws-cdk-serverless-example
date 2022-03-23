@@ -1,6 +1,7 @@
 # GSD-AWS-CDK-Serverless-Example
 [![CI](https://github.com/chrishart0/gsd-aws-cdk-serverless-example/actions/workflows/CI.yml/badge.svg)](https://github.com/chrishart0/gsd-aws-cdk-serverless-example/actions/workflows/CI.yml)
 [![CodeQL](https://github.com/chrishart0/gsd-aws-cdk-serverless-example/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/chrishart0/gsd-aws-cdk-serverless-example/actions/workflows/codeql-analysis.yml)
+[![codecov](https://codecov.io/gh/chrishart0/gsd-aws-cdk-serverless-example/branch/master/graph/badge.svg?token=LUPPA172C2)](https://codecov.io/gh/chrishart0/gsd-aws-cdk-serverless-example)
 
 Live Demo: [awsdemo.chrishart.cloud](https://awsdemo.chrishart.cloud/)
 
@@ -11,8 +12,13 @@ The best part? Initial setup only takes a few minutes, most of which is waiting 
 
 This repo uses a pattern called [Three Musketeers](https://www.drewkhoury.com/post/gsd/3-musketeers-for-an-epic-developer-experience-8676ddaf33b2/), which provides for ease of setup and a better developer experience for this complicated local testing environment, with the added benefit of using the same local commands for the CI/CD.
 
-# First Time Use
+# Overview
 
+Deploys a 3 tier serverless app to AWS and allows for easy local testing and development
+
+![Infra diagram](infrastructure/Infra-Diagram.drawio.png)
+
+# First Time Use
 
 **NOTE: None of this will work if you don't have an aws configuration file. (Which you won't if you've never made an aws config file on your machine)**
 ## How to create an AWS configuration file 
@@ -38,16 +44,15 @@ Ensure you have `docker`, `docker-compose`, and `make` installed.
 ## Configuration 
 *You can skip this step if you want to test locally and wait until you are ready to deploy to do the configs.*
 
+A prerequisite is you have a domain in AWS Route53.
 In the root of this repo make a file called `configs.env` and fill it out as show below but replacing the example values.
 
-The first three can all be found under Route 53 Hosted Zones details in AWS console. 
+If you don't know how to locate the hosted zone name or ID follow [this article](https://arcadian.cloud/aws/2022/03/22/how-to-find-hosted-zone-id-in-route53-aws-in-3-clicks/).
 
------------Unsure about REACT_APP_USER_API_DOMAIN ---------------
 ```
-domain=site.EXAMPLE.com
-hostedZoneName=EXAMPLE.com
-hostedZoneId=123ASDFGH456AQWER34T4V1C
-REACT_APP_USER_API_DOMAIN=api.site.EXAMPLE.com
+REACT_APP_DOMAIN=site.EXAMPLE.com
+REACT_APP_HOSTED_ZONE_NAME=EXAMPLE.com
+REACT_APP_HOSTED_ZONE_ID=123ASDFGH456AQWER34T4V1C
 REACT_APP_USER_API_URL_LOCAL_SAM=http://localhost:3001/users
 ```
 
@@ -161,19 +166,12 @@ Devs don't do local testing (because it's too hard or takes too much time).
 A non-exhaustive list of items left to be addressed.
 
 * CI/CD
-  * Quality Scan: Add <https://www.sonarqube.org/downloads/> community edition to CI/CD. Use [this](https://github.com/contino/gsd-hello-world/blob/main/.github/workflows/quality.yml) as reference
-  * 80% unit test coverage
-    * Frontend
-    * Backend
-  * Add env handling to Github Actions
-  * Get deploys working in GitHub actions
   * Split e2e testing into own run to speedup CI/CD
-  * Add npm caching to speed up CI/CD
   * Investigate pre-building containers for faster CI/CD
   * Figure out a way to automatically include AWS config file 
 
-* Lambda API
-  * Add unit tests to lambda function
+* Local Dynamo
+  * Cannot run more than one container/(template)repo at the same time 
 
 * Monitoring
   * Make a CloudWatch dashboard
