@@ -5,3 +5,4 @@ nohup.out
 watch.log
 configs.env
 coverage-reports
+./package.json
