@@ -32,13 +32,23 @@ Deploys a 3 tier serverless app to AWS and allows for easy local testing and dev
 
 # Setup
 Ensure you have `docker`, `docker-compose`, and `make` installed. 
+ 
+  AWS CLI : https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
+  
+  Docker: https://www.docker.com/
+  
+  Will need to install an Ubuntu shell if on windows. Ie WSL
+
+  Pull the Repo into your local environment
 
 ## Configuration 
 *You can skip this step if you want to test locally and wait until you are ready to deploy to do the configs.*
 
 A prerequisite is you have a domain in AWS Route53.
 In the root of this repo make a file called `configs.env` and fill it out as show below but replacing the example values.
+
 If you don't know how to locate the hosted zone name or ID follow [this article](https://arcadian.cloud/aws/2022/03/22/how-to-find-hosted-zone-id-in-route53-aws-in-3-clicks/).
+
 ```
 REACT_APP_DOMAIN=site.EXAMPLE.com
 REACT_APP_HOSTED_ZONE_NAME=EXAMPLE.com
