@@ -33,10 +33,13 @@ _prep-env-ci:
 	aws --profile default configure set aws_secret_access_key "${AWS_SECRET_ACCESS_KEY}"
 	aws --profile default configure set aws_default_region "${AWS_DEFAULT_REGION}"
 
+_check-aws-creds_configured:
+	if [ ! -s  ~/.aws/config ]; then make _prep-env-fake-aws-creds ; else echo "found aws creds"; fi
+
 _prep-env-fake-aws-creds:
-	aws --profile default configure set aws_access_key_id "abc123"
-	aws --profile default configure set aws_secret_access_key "def456"
-	aws --profile default configure set aws_default_region "us-south-7"
+	aws --profile default configure set aws_access_key_id "abc123fake"
+	aws --profile default configure set aws_secret_access_key "def456fake"
+	aws --profile default configure set aws_default_region "us-fake-7"
 
 build-container: 
 	docker-compose build
@@ -56,7 +59,7 @@ install: _prep-env build-container install-infra install-frontend install-e2e in
 test: test-frontend test-backend test-infra test-e2e## test the app - you can test specific parts with test-x (options are frontend, frontend-interactive, backend, e2e, infra)
 
 .PHONY: run
-run: _prep-env _prep-cache check-infra-synthed down _launch-browser ## run the application locally (must manually run `make install` at least once)
+run: _prep-env _prep-cache _check-aws-creds_configured check-infra-synthed down _launch-browser ## run the application locally (must manually run `make install` at least once)
 	${COMPOSE_UP_FULL_STACK}
 
 ################
