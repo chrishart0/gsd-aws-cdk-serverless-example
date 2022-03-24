@@ -64,14 +64,13 @@ function App() {
         <Navbar className="AppBar" isDarkTheme={isDarkTheme} setIsDarkTheme={setIsDarkTheme} />
 
         <Container className="body" maxWidth="md">
-          <Typography variant="h2">Welcome to this demo site!</Typography>
+          <Typography variant="h2">Welcome to my demo meetup!</Typography>
           <Typography variant="h5">Made with the S3, Lambda, and DDB stack</Typography>
           <br />
           <Typography>
             This demo shows how to use a static site hosted in S3, a Lambda function + APG, and DynamoDB. All testing locally and in the
             CI/CD.
           </Typography>
-          <Typography variant="h2">Hello Demo!</Typography>
           <br />
           <Typography>
             <a href="https://github.com/chrishart0/gsd-aws-cdk-serverless-example" target="_blank" rel="noreferrer">

@@ -13,7 +13,7 @@ afterEach(() => {
 
 it("renders static page as expected", async () => {
   render(<App />);
-  const primaryHeading = screen.getByText("Welcome to this demo site!");
+  const primaryHeading = screen.getByText("Welcome to my demo meetup!");
   expect(primaryHeading).toBeInTheDocument();
 
   const subHeading = screen.getByText("Made with the S3, Lambda, and DDB stack");
