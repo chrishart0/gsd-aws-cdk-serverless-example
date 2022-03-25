@@ -107,11 +107,11 @@ jobs:
     - name: Deploy
       run: make deploy
 
-    - name: e2e test
-      run: | 
-        make test-e2e-deployed
-      env:
-        E2E_TEST_URL: awsdemo.chrishart.cloud #This is a test, for some reason the variable isn't working
+    # - name: e2e test
+    #   run: | 
+    #     make test-e2e-deployed
+    #   env:
+    #     E2E_TEST_URL: awsdemo.chrishart.cloud #This is a test, for some reason the variable isn't working
 
     # - name: SonarCloud Scan
     #   uses: sonarsource/sonarcloud-github-action@v1.6
