@@ -110,6 +110,8 @@ jobs:
     - name: e2e test
       run: | 
         make test-e2e-deployed
+      env:
+        E2E_TEST_URL: ${{ secrets.REACT_APP_DOMAIN }}
 
     # - name: SonarCloud Scan
     #   uses: sonarsource/sonarcloud-github-action@v1.6
