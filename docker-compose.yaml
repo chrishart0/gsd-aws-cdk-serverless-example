@@ -13,7 +13,8 @@ services:
       - ~/.npm/:$HOME
       - $PWD:$PWD
       - ~/.aws/:/root/.aws:ro
-      # - ~/.npm:~/.npm #npm cache
+      - /var/run/docker.sock:/var/run/docker.sock #Needed so a docker container can be run from inside a docker container
+      # - /root/.docker/config.json:/root/.docker/config.json:ro
     ports:
       - "3000:3000"
 

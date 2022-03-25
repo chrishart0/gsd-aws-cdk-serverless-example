@@ -3,6 +3,7 @@ import os
 import logging
 import boto3
 from botocore.exceptions import ClientError
+# import requests
 
 # Handle logger
 logger = logging.getLogger()
@@ -79,12 +80,21 @@ def updateUserCount(count):
         else:
             logger.error("UNEXPECTED ERROR from DDB: %s" % e)
 
+# def get_github_start():
+#     # response = requests.get('https://api.github.com/repos/chrishart0/gsd-aws-cdk-serverless-example')
+#     # stared_count = response.content['stargazers_count']
+#     # print("resp:")
+#     # print(stared_count)
+#     return 5
+
 def lambda_handler(event, context):
 
     logger.info("Lambda handler invocation initiated")
 
     user_count = getUserCount()
     updateUserCount(user_count)
+
+    # gitHub_stars = get_github_start()
 
     if not (user_count):
         logger.error('Something went wrong, returning 500')
@@ -98,7 +108,7 @@ def lambda_handler(event, context):
         }
     }
 
-    logger.error('Function completed successfully, returning 200')
+    logger.info('Function completed successfully, returning 200')
     return {
         "statusCode": 200,
         'headers': {
@@ -109,5 +119,6 @@ def lambda_handler(event, context):
         },
         "body": json.dumps({
             "User count": str(user_count),
+            # "GitHub stars": str(gitHub_stars)
         }),
     }

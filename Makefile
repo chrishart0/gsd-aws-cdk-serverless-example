@@ -1,13 +1,14 @@
 SHELL=/bin/bash
 CDK_DIR=infrastructure
-COMPOSE_RUN = docker-compose run --rm base
+# COMPOSE_RUN = docker-compose run --rm base
+COMPOSE_RUN = docker-compose run --user ${UID}:${GID} --rm base
 COMPOSE_RUN_WITH_PORTS = docker-compose run -d --name base --service-ports --rm base
 COMPOSE_UP_FULL_STACK = docker-compose up dynamodb sam frontend
 COMPOSE_UP_FRONTEND = docker-compose up frontend
 COMPOSE_UP_BACKEND = docker-compose up dynamodb sam
 COMPOSE_RUN_PLAYWRIGHT = docker-compose run --rm playwright
 COMPOSE_UP = docker-compose up base
-PROFILE = --profile default
+PROFILE = --profile gsd
 REGION = --region us-east-1
 
 .DEFAULT_GOAL := help
@@ -57,10 +58,10 @@ cli: _prep-cache
 install: _check-aws-creds_configured _prep-env build-container install-infra install-frontend install-e2e install-backend ## Initial setup - create config file, build container images, installs deps
 
 .PHONY: test
-test: test-frontend-lint test-frontend test-backend test-infra test-e2e## test the app - you can test specific parts with test-x (options are frontend, frontend-interactive, backend, e2e, infra)
+test: test-frontend-lint test-frontend-ci test-backend-ci test-infra test-e2e## test the app - you can test specific parts with test-x (options are frontend, frontend-interactive, backend, e2e, infra)
 
 .PHONY: run
-run: _prep-env _prep-cache check-infra-synthed  down _launch-browser ## run the application locally (must manually run `make install` at least once)
+run: _prep-env _prep-cache check-infra-synthed _launch-browser ## run the application locally (must manually run `make install` at least once)
 	${COMPOSE_UP_FULL_STACK}
 
 .PHONY: lint
@@ -121,14 +122,14 @@ test-frontend:
 	${COMPOSE_RUN} make _test-frontend
 
 _test-frontend:
-	CI=true npm run coverage --prefix frontend/ 
-
-.PHONY: test-frontend-interactive
-test-frontend-interactive: 
-	${COMPOSE_RUN} make _test-frontend-interactive
-
-_test-frontend-interactive:
 	npm test --prefix frontend/ -- --coverage
+
+.PHONY: test-frontend-ci
+test-frontend-ci: 
+	${COMPOSE_RUN} make _test-frontend-ci
+
+_test-frontend-ci:
+	CI=true npm run coverage --prefix frontend/ 
 
 _check-frontend-built : 
 	if [ ! -d ./frontend/build ]; then make build; fi
@@ -175,19 +176,28 @@ install-backend:
 	${COMPOSE_RUN} make _install-backend
 
 _install-backend:
-	python3 -m venv backend/.venv
-	source backend/.venv/bin/activate
-	pip install -r backend/tests/requirements.txt
+	python3 -m venv backend/.venv && source backend/.venv/bin/activate && pip install -r backend/tests/requirements.txt
 
 .PHONY: test-backend
 test-backend: test-backend-unit
+
+.PHONY: test-backend-ci
+test-backend-ci: test-backend-unit-ci
+
+.PHONY: test-backend-unit-ci
+test-backend-unit-ci:
+	${COMPOSE_RUN} make _test-backend-unit-ci
+
+_test-backend-unit-ci:
+	source backend/.venv/bin/activate && cd backend && LOG_LEVEL=INFO AWSENV=AWSENV TABLE_NAME=visitorCount CORS_URL=http://localhost:3000 AWS_DEFAULT_REGION=us-east-1 python -m pytest tests/unit -v --cov=hello_world --cov-report xml --cov-fail-under 80 && cd ..
 
 .PHONY: test-backend-unit
 test-backend-unit:
 	${COMPOSE_RUN} make _test-backend-unit
 
+# https://pypi.org/project/pytest-watch/
 _test-backend-unit:
-	cd backend && LOG_LEVEL=INFO AWSENV=AWSENV TABLE_NAME=visitorCount CORS_URL=http://localhost:3000 AWS_DEFAULT_REGION=us-east-1 python -m pytest tests/unit -v --cov=hello_world --cov-report xml --cov-fail-under 80 && cd ..
+	source backend/.venv/bin/activate && cd backend && LOG_LEVEL=INFO AWSENV=AWSENV TABLE_NAME=visitorCount CORS_URL=http://localhost:3000 AWS_DEFAULT_REGION=us-east-1  ptw --runner "python -m pytest -v --cov=hello_world --cov-report xml --cov-fail-under 80 "
 
 # Monitor lambda function logs which was deployed from local
 # ToDo: Monitor other lambda functions
@@ -254,7 +264,16 @@ check-infra-synthed:
 _check-infra-synthed:
 	if [ ! -s ./${CDK_DIR}/template.yaml ]; then make _build && make _synth; else echo "found template.yaml"; fi
 
-synth: _prep-cache _check-frontend-built
+#ToDo: Come up with a better fix for this and make it into the container. Issue looks to be the UID being 0
+# Maybe not safe, temporary workaround for local testing issue
+fix-docker-cdk-perms-issue:
+	${COMPOSE_RUN} make _fix-docker-cdk-perms-issue
+
+_fix-docker-cdk-perms-issue:
+	chmod 666 /var/run/docker.sock
+
+
+synth: _prep-cache _check-frontend-built fix-docker-cdk-perms-issue
 	${COMPOSE_RUN} make _synth
 
 _synth:
@@ -266,7 +285,7 @@ bootstrap: _prep-cache
 _bootstrap:
 	cd ${CDK_DIR} && cdk bootstrap ${PROFILE}
 
-deploy: _prep-cache build ## deploys project to AWS with the configs specified in configs.env
+deploy: _prep-cache build fix-docker-cdk-perms-issue ## deploys project to AWS with the configs specified in configs.env
 	${COMPOSE_RUN} make _deploy 
 
 deploy-no-build: _prep-cache
@@ -281,7 +300,7 @@ destroy:
 _destroy:
 	cd ${CDK_DIR} && cdk destroy --force ${PROFILE}
 
-diff: _prep-cache _check-frontend-built ## an overview of what infra will be deployed (cdk diff)
+diff: _prep-cache _check-frontend-built fix-docker-cdk-perms-issue ## an overview of what infra will be deployed (cdk diff)
 	${COMPOSE_RUN} make _diff
 
 _diff: _prep-cache

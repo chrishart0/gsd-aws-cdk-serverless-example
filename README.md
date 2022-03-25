@@ -151,6 +151,11 @@ This command will parse through the template created by `make synth` and monitor
 ## Detailed description of how local testing works
 *ToDo*
 
+## Importing dependencies into python lambda function
+1) Add the dep to [backend/hello_world/requirements.txt](backend/hello_world/requirements.txt)
+2) Run `make synth` to allow [CDK](infrastructure/lib/infrastructure-stack.ts) to download and prepare the deps for lambda using the [Lambda python construct]https://docs.aws.amazon.com/cdk/api/v2/docs/aws-lambda-python-alpha-readme.html)
+3) Run `make run` to test the new dep locally
+4) Deploy!
 # Goals
 It's hard to maintain and locally test serverless envs.
 

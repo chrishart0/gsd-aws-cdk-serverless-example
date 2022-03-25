@@ -2,12 +2,22 @@ FROM mcr.microsoft.com/playwright:focal
 
 WORKDIR /app
 
-#Figure out a better way of handling getting the python reqs installed
+# ToDO: Figure out why sam only works if we install these in the container build
+# Probably just need to install boto or something 
 COPY backend/tests/requirements.txt /tmp
+
+# # Install docker so that cdk lambda packaging works
+RUN  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg \
+     && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+        $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null \
+    && apt-get update \
+    && apt-get install docker-ce-cli -y
+
+# && apt-get install docker-ce docker-ce-cli containerd.io -y
 
 #Install CDK and Frontend
 RUN apt-get update && apt-get install -y \
-    make jq\
+    make jq \
     software-properties-common \
     && npm install -g aws-cdk ts-node
 

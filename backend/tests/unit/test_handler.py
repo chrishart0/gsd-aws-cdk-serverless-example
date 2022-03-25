@@ -91,13 +91,12 @@ def test_first_user_give_1_user(apigw_event):
         }
     )
 
-    ret = app.lambda_handler(apigw_event, "")
-    print("ret:",ret)
-    data = json.loads(ret["body"])
+    response = app.lambda_handler(apigw_event, "")
+    data = json.loads(response["body"])
     print("data:",data)
 
 
-    assert ret["statusCode"] == 200
+    assert response["statusCode"] == 200
     assert data["User count"] == "1"
 
 @mock_dynamodb
@@ -127,13 +126,12 @@ def test_second_user_give_2_users(apigw_event):
     )
 
     app.lambda_handler(apigw_event, "")
-    ret = app.lambda_handler(apigw_event, "")
-    print("ret:",ret)
-    data = json.loads(ret["body"])
+    response = app.lambda_handler(apigw_event, "")
+    data = json.loads(response["body"])
     print("data:",data)
 
 
-    assert ret["statusCode"] == 200
+    assert response["statusCode"] == 200
     assert data["User count"] == "2"
 
 def test_bad_ddb(apigw_event):
@@ -141,8 +139,47 @@ def test_bad_ddb(apigw_event):
     from hello_world import app
 
     app.lambda_handler(apigw_event, "")
-    ret = app.lambda_handler(apigw_event, "")
+    response = app.lambda_handler(apigw_event, "")
 
-    assert ret["statusCode"] == 500
+    assert response["statusCode"] == 500
+
+# @mock_dynamodb
+# def test_github_start_returned(apigw_event):
+
+#     from hello_world import app
+    
+#     dynamodb = boto3.resource('dynamodb')
+#     dynamodb.create_table(
+#         TableName='visitorCount',
+#         KeySchema=[
+#             {
+#                 'AttributeName': 'Count',
+#                 'KeyType': 'HASH'
+#             }
+#         ],
+#         AttributeDefinitions=[
+#             {
+#                 'AttributeName': 'Count',
+#                 'AttributeType': 'S'
+#             }
+#         ],
+#         ProvisionedThroughput={
+#             'ReadCapacityUnits': 1,
+#             'WriteCapacityUnits': 1
+#         }
+#     )
+
+#     app.lambda_handler(apigw_event, "")
+#     response = app.lambda_handler(apigw_event, "")
+#     data = json.loads(response["body"])
+#     print("data:",data)
+
+
+#     print()
+#     assert response["statusCode"] == 200
+#     assert data["GitHub stars"] == "5"
+
+
+    
 
     

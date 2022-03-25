@@ -53,12 +53,12 @@ jobs:
 
     - name: Frontend Unit Tests
       id: frontend_unit_tests
-      run: make test-frontend
+      run: make test-frontend-ci
       
     - name: Backend Unit Tests
       id: backend_unit_tests
       if: success() || steps.frontend_unit_tests.outcome == 'failure' #Run backend unit tests even if frontend tests fail
-      run: make test-backend
+      run: make test-backend-ci
 
     #Need to get tests hitting API to work
     # - name: Local e2e test

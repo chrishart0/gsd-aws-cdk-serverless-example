@@ -64,7 +64,7 @@ function App() {
         <Navbar className="AppBar" isDarkTheme={isDarkTheme} setIsDarkTheme={setIsDarkTheme} />
 
         <Container className="body" maxWidth="md">
-          <Typography variant="h2">Welcome to my demo meetup!</Typography>
+          <Typography variant="h2">Welcome to this demo site!</Typography>
           <Typography variant="h5">Made with the S3, Lambda, and DDB stack</Typography>
           <br />
           <Typography>

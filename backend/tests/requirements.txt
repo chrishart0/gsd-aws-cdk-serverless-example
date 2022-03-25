@@ -6,3 +6,4 @@ moto
 pytest-cov
 pylint
 coveralls
+pytest-watch

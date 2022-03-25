@@ -7,11 +7,11 @@ import { aws_s3_deployment as s3_deployment } from 'aws-cdk-lib';
 import { aws_iam as iam } from 'aws-cdk-lib';
 import { aws_certificatemanager as acm } from 'aws-cdk-lib';
 import { aws_lambda as lambda } from 'aws-cdk-lib';
+import { PythonFunction } from '@aws-cdk/aws-lambda-python-alpha';
 import { aws_logs as logs } from 'aws-cdk-lib';
 import { aws_apigateway as apigateway } from 'aws-cdk-lib';
 import { aws_dynamodb as dynamodb } from 'aws-cdk-lib';
 // import { LambdaFunction } from 'aws-cdk-lib/aws-events-targets';
-import * as serverless from 'aws-cdk-lib/aws-sam';
 import { Construct } from 'constructs';
 
 export class InfrastructureStack extends Stack {
@@ -153,6 +153,22 @@ export class InfrastructureStack extends Stack {
         'LOG_LEVEL': 'INFO',
       }
     });
+
+    // https://docs.aws.amazon.com/cdk/api/v2/docs/aws-lambda-python-alpha-readme.html
+    // https://github.com/aws/aws-cdk/issues/9348
+    // const backendFunction = new PythonFunction(this, 'BackendFunction', {
+    //   entry: '../backend/hello_world/',
+    //   runtime: lambda.Runtime.PYTHON_3_8,
+    //   index: 'app.py',
+    //   handler: 'lambda_handler',
+    //   timeout: Duration.seconds(3),
+    //   environment: {
+    //     'TABLE_NAME': ddb.tableName,
+    //     'CORS_URL': 'https://' + siteDomain,
+    //     'AWSENV': "AWS",
+    //     'LOG_LEVEL': 'INFO',
+    //   } 
+    // });
 
     ddb.grantReadWriteData(backendFunction)
 
