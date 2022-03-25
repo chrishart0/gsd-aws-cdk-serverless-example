@@ -328,7 +328,7 @@ test-e2e-deployed: # Run end-to-end tests against deployment configured in confi
 	${COMPOSE_RUN_PLAYWRIGHT} make _test-e2e-deployed
 
 _test-e2e-deployed:
-	cd e2e && E2E_TEST_URL=https://chris.awsdemo.chrishart.cloud/ npx playwright test --output ../test_results/ && cd .. 
+	cd e2e && CI=true npx playwright test --output ../test_results/ && cd .. 
 
 # ToDo Make this work
 # .PHONY: test-e2e-interactive

@@ -7,7 +7,7 @@ const regexp = /(?<=REACT_APP_DOMAIN=).*/g;
 const extractedUrl = data.match(regexp);
 
 // If E2E_TEST_URL is provided then use it, otherwise parse config.env file
-const url = (process.env.E2E_TEST_URL) ? process.env.E2E_TEST_URL : extractedUrl
+const url = (process.env.E2E_TEST_URL) ? process.env.E2E_TEST_URL : "https://" + extractedUrl[0]
 console.log("Testing url: ", url)
 
 test.beforeEach(async ({ page }) => {
