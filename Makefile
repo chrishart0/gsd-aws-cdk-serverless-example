@@ -8,7 +8,7 @@ COMPOSE_UP_FRONTEND = docker-compose up frontend
 COMPOSE_UP_BACKEND = docker-compose up dynamodb sam
 COMPOSE_RUN_PLAYWRIGHT = docker-compose run --rm playwright
 COMPOSE_UP = docker-compose up base
-PROFILE = --profile default
+PROFILE = --profile gsd
 REGION = --region us-east-1
 
 .DEFAULT_GOAL := help
@@ -317,11 +317,18 @@ _install-e2e npm-install-playwright:
 	npm install --prefix e2e/
 
 .PHONY: test-e2e
-test-e2e:
+test-e2e: # Use Playwright to run end-to-end tests against localhost:3000 deployment, verify react frontend and lambda talk to eachother as expected
 	${COMPOSE_RUN_PLAYWRIGHT} make _test-e2e
 
-_test-e2e:
-	cd e2e && npx playwright test --output ../test_results/ && cd .. 
+_test-e2e: 
+	cd e2e && E2E_TEST_URL=http://localhost:3000 npx playwright test --output ../test_results/ && cd .. 
+
+.PHONY: test-e2e-deployed
+test-e2e-deployed: # Run end-to-end tests against deployment configured in configs.env
+	${COMPOSE_RUN_PLAYWRIGHT} make _test-e2e-deployed
+
+_test-e2e-deployed:
+	cd e2e && E2E_TEST_URL=https://chris.awsdemo.chrishart.cloud/ npx playwright test --output ../test_results/ && cd .. 
 
 # ToDo Make this work
 # .PHONY: test-e2e-interactive

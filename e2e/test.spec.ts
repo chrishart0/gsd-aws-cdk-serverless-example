@@ -1,5 +1,14 @@
 import { test, expect, Page } from '@playwright/test';
-const url = 'http://localhost:3000/'
+const fs = require('fs')
+
+// Figure url from config file
+const data = fs.readFileSync('../configs.env', 'utf8')
+const regexp = /(?<=REACT_APP_DOMAIN=).*/g;
+const extractedUrl = data.match(regexp);
+
+// If E2E_TEST_URL is provided then use it, otherwise parse config.env file
+const url = (process.env.E2E_TEST_URL) ? process.env.E2E_TEST_URL : extractedUrl
+console.log("Testing url: ", url)
 
 test.beforeEach(async ({ page }) => {
   await page.goto(url);
@@ -29,11 +38,10 @@ test.describe('that visitor counter works', () => {
 
   test('visitor counter is visible', async ({ page }) => {    
     await expect(page.locator('.visitorCounter')).toBeVisible();
-    await expect(page.locator('text="Visitor Count:"')).toBeVisible();
   });
 
   test('visitor counter got a valid number from the API', async ({ page }) => {   
-    const visitorCounter = await expect(page.locator('.visitorCounter')).toContainText(/Visitor Count: \d/);
+    await expect(page.locator('.visitorCounter')).toContainText(/Visitor Count: \d/);
   });
 
 });

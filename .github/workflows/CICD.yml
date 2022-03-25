@@ -107,6 +107,10 @@ jobs:
     - name: Deploy
       run: make deploy
 
+    - name: e2e test
+      run: | 
+        make test-e2e-deployed
+
     # - name: SonarCloud Scan
     #   uses: sonarsource/sonarcloud-github-action@v1.6
     #   env:
