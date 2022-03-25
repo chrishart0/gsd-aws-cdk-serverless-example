@@ -8,7 +8,7 @@ COMPOSE_UP_FRONTEND = docker-compose up frontend
 COMPOSE_UP_BACKEND = docker-compose up dynamodb sam
 COMPOSE_RUN_PLAYWRIGHT = docker-compose run --rm playwright
 COMPOSE_UP = docker-compose up base
-PROFILE = --profile gsd
+PROFILE = --profile default
 REGION = --region us-east-1
 
 .DEFAULT_GOAL := help
