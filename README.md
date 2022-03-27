@@ -180,9 +180,6 @@ A non-exhaustive list of items left to be addressed.
   * Run e2e after deploy
   * Investigate pre-building containers for faster CI/CD
 
-* Local Dynamo
-  * Cannot run more than one container/(template)repo at the same time 
-
 * Linting
   * Backend
   * e2e
