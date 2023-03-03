@@ -25,6 +25,7 @@ RUN apt-get update && apt-get install -y \
 # Install deps for SAM Backend
 RUN apt-get install -y \
     python3.9 \
+    python3-pip\
     python3.8-venv python3.9-venv \
     && pip install pip \
     && pip install awscli aws-sam-cli==1.12.0 markupsafe==2.0.1 jinja2==2.10.1 botocore==1.24.14 \
